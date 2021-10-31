@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title> - Python</title>
+	<link href="https://example.com/categories/python/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://example.com"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2021-10-31T00:00:00+00:00</updated>
+	<id>https://example.com/categories/python/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Pandas tricks</title>
+		<published>2021-10-31T00:00:00+00:00</published>
+		<updated>2021-10-31T00:00:00+00:00</updated>
+		<link href="https://example.com/modern-pandas/" type="text/html"/>
+		<id>https://example.com/modern-pandas/</id>
+		<content type="html">&lt;p&gt;工作中处理数据，经常会用到Pandas。Pandas功能丰富，也有很多不同的API。以下纪录一些自己觉得比较有意思的用法。&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;
+&lt;h2 id=&quot;method-chaining&quot;&gt;Method Chaining&lt;&#x2F;h2&gt;
+&lt;p&gt;先看一段代码&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;    # above have createde a dataframe&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    df.drop_duplicates(subset=[&amp;#39;col1&amp;#39;], keep=&amp;#39;first&amp;#39;)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    df = pd.merge(df, df_category, on=&amp;#39;code&amp;#39;, how=&amp;#39;left&amp;#39;)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    df = pd.merge(df, df_saleType, on=&amp;#39;code&amp;#39;, how=&amp;#39;left&amp;#39;)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    df = pd.merge(df, product_info, on=&amp;#39;code&amp;#39;, how=&amp;#39;left&amp;#39;)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    df.rename(columns={&amp;#39;old_name&amp;#39;: &amp;#39;new_name&amp;#39;})&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    df[&amp;#39;category&amp;#39;] = df[&amp;#39;category&amp;#39;].apply(clean_category)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    df[&amp;#39;saleType&amp;#39;] = df[&amp;#39;saleType&amp;#39;].apply(clean_saleType)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    df[&amp;#39;price&amp;#39;] = df[&amp;#39;price&amp;#39;].apply(clean_price)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    # there are another many lines likes this&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这段代码中，进行了清除重复行、合并不同的dataframe，对dataframe的列进行清理，都是数据处理中经常会遇到的任务。
+问题是，当这种处理非常多的时候，会出现几十行面条一样的代码，可读性很差，也难以维护（尤其在字段名称有中文的时候）。
+这时候可以使用&lt;code&gt;pandas.DataFrame.method chaining&lt;&#x2F;code&gt;来优化处理。&lt;&#x2F;p&gt;
+&lt;p&gt;Pandas DataFrame 支持 Method chaining，可以把多个方法放在一起，比如下面这段代码：&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;    def clean_saleType(df):&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        # do some cleaning&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        return df&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    df = (df.rename(columns={&amp;#39;old_name&amp;#39;: &amp;#39;new_name&amp;#39;})&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          .drop_duplicates(subset=[&amp;#39;col1&amp;#39;], keep=&amp;#39;first&amp;#39;)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          .merge(df_category, on=&amp;#39;code&amp;#39;, how=&amp;#39;left&amp;#39;)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          .merge(df_saleType, on=&amp;#39;code&amp;#39;, how=&amp;#39;left&amp;#39;)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          .merge(product_info, on=&amp;#39;code&amp;#39;, how=&amp;#39;left&amp;#39;)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          .assign(cagegory=lambda x: x[&amp;#39;category&amp;#39;].apply(clean_category))&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          .pipe(clean_saleType)&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          )&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;上述Method chaining 由以下部分组成： &lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;DataFrame.drop_duplicates()&lt;&#x2F;code&gt; 等Pandas 自带的API（默认返回DataFrame即可）&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;DataFrame.assign(**kwargs)&lt;&#x2F;code&gt; 在DataFrame中添加列，列的值根据传入的col=Method进行计算&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;DataFrame.pipe(func, *args, **kwargs)&lt;&#x2F;code&gt; 将用户自定义的方式引入到Method chaining中&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;需要说明的是，&lt;code&gt;DataFrame.assign&lt;&#x2F;code&gt;和&lt;code&gt;DataFrame.pipe&lt;&#x2F;code&gt;都不会修改原有的DataFrame，而是返回一个新的DataFrame。
+这一点在调试过程中会有帮忙。&lt;&#x2F;p&gt;
+&lt;p&gt;对比而言，使用 Method Chaining 可以将数据处理的逻辑整合到一起，提升可读性。但是，凡事过犹不及，Method Chaining 也可能被滥用。
+不合理的代码组织，混乱的处理逻辑都可能导致可读性变差。同时过长的 Method Chaining 也会导致 Debug 变得困难。需要注意的是，对于
+Method Chaining 过于长的情况，可以通过合并处理逻辑到一个Method，通过一个DataFrame.pipe调用来优化。&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>

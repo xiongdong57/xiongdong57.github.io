@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title> - Pandas tricks</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+      
+
+      
+          <link rel="stylesheet" href="https://example.com/site.css">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">Dong</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;example.com">
+                            Home
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;example.com&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;example.com&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;example.com&#x2F;about">
+                            About
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;example.com">Dong</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;example.com">
+                                    Home
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;example.com&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;example.com&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;example.com&#x2F;about">
+                                    About
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+<div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content always-active">
+        <nav id="TableOfContents">
+            <ul>
+                
+                <li>
+                    <a href="https://example.com/modern-pandas/#method-chaining" class="toc-link">Method Chaining</a>
+                    
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;example.com&#x2F;modern-pandas&#x2F;">Pandas tricks</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-10-31</span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <p>工作中处理数据，经常会用到Pandas。Pandas功能丰富，也有很多不同的API。以下纪录一些自己觉得比较有意思的用法。</p>
+<span id="continue-reading"></span>
+<h2 id="method-chaining">Method Chaining</h2>
+<p>先看一段代码</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>    # above have createde a dataframe</span><span>
+</span><span>    df.drop_duplicates(subset=[&#39;col1&#39;], keep=&#39;first&#39;)</span><span>
+</span><span>
+</span><span>    df = pd.merge(df, df_category, on=&#39;code&#39;, how=&#39;left&#39;)</span><span>
+</span><span>    df = pd.merge(df, df_saleType, on=&#39;code&#39;, how=&#39;left&#39;)</span><span>
+</span><span>    df = pd.merge(df, product_info, on=&#39;code&#39;, how=&#39;left&#39;)</span><span>
+</span><span>
+</span><span>    df.rename(columns={&#39;old_name&#39;: &#39;new_name&#39;})</span><span>
+</span><span>
+</span><span>    df[&#39;category&#39;] = df[&#39;category&#39;].apply(clean_category)</span><span>
+</span><span>    df[&#39;saleType&#39;] = df[&#39;saleType&#39;].apply(clean_saleType)</span><span>
+</span><span>    df[&#39;price&#39;] = df[&#39;price&#39;].apply(clean_price)</span><span>
+</span><span>    # there are another many lines likes this</span><span>
+</span></code></pre>
+<p>这段代码中，进行了清除重复行、合并不同的dataframe，对dataframe的列进行清理，都是数据处理中经常会遇到的任务。
+问题是，当这种处理非常多的时候，会出现几十行面条一样的代码，可读性很差，也难以维护（尤其在字段名称有中文的时候）。
+这时候可以使用<code>pandas.DataFrame.method chaining</code>来优化处理。</p>
+<p>Pandas DataFrame 支持 Method chaining，可以把多个方法放在一起，比如下面这段代码：</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>    def clean_saleType(df):</span><span>
+</span><span>        # do some cleaning</span><span>
+</span><span>        return df</span><span>
+</span><span>
+</span><span>    df = (df.rename(columns={&#39;old_name&#39;: &#39;new_name&#39;})</span><span>
+</span><span>          .drop_duplicates(subset=[&#39;col1&#39;], keep=&#39;first&#39;)</span><span>
+</span><span>          .merge(df_category, on=&#39;code&#39;, how=&#39;left&#39;)</span><span>
+</span><span>          .merge(df_saleType, on=&#39;code&#39;, how=&#39;left&#39;)</span><span>
+</span><span>          .merge(product_info, on=&#39;code&#39;, how=&#39;left&#39;)</span><span>
+</span><span>          .assign(cagegory=lambda x: x[&#39;category&#39;].apply(clean_category))</span><span>
+</span><span>          .pipe(clean_saleType)</span><span>
+</span><span>          )</span><span>
+</span></code></pre>
+<p>上述Method chaining 由以下部分组成： </p>
+<ul>
+<li><code>DataFrame.drop_duplicates()</code> 等Pandas 自带的API（默认返回DataFrame即可）</li>
+<li><code>DataFrame.assign(**kwargs)</code> 在DataFrame中添加列，列的值根据传入的col=Method进行计算</li>
+<li><code>DataFrame.pipe(func, *args, **kwargs)</code> 将用户自定义的方式引入到Method chaining中</li>
+</ul>
+<p>需要说明的是，<code>DataFrame.assign</code>和<code>DataFrame.pipe</code>都不会修改原有的DataFrame，而是返回一个新的DataFrame。
+这一点在调试过程中会有帮忙。</p>
+<p>对比而言，使用 Method Chaining 可以将数据处理的逻辑整合到一起，提升可读性。但是，凡事过犹不及，Method Chaining 也可能被滥用。
+不合理的代码组织，混乱的处理逻辑都可能导致可读性变差。同时过长的 Method Chaining 也会导致 Debug 变得困难。需要注意的是，对于
+Method Chaining 过于长的情况，可以通过合并处理逻辑到一个Method，通过一个DataFrame.pipe调用来优化。</p>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https://example.com/even.js" ></script>
+      
+    </body>
+
+</html>
