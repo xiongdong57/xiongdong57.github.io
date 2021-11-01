@@ -4,5 +4,5 @@ path = "about"
 template = "about.html"
 +++
 
-Your strength is your weakness.  
-Your weakness is your strength.
+Your Strength is Your Weakness.  
+Your Weakness is Your Strength.
