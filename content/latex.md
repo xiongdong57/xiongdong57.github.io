@@ -8,6 +8,13 @@ draft = true
 \\[ Q = \sqrt{\frac {2DS} H}
 \\]
 
+$$
+\begin{Bmatrix}
+   a & b 
+   \\\c & d
+\end{Bmatrix}
+$$
+
 20211108 这周的blog主题是EOQ Model
 下周 NewsVendor Model
 next safety stock
