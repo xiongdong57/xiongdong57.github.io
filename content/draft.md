@@ -18,7 +18,7 @@ draft = true
 #### SCM
 - [x] EOQ Model
 - [x] Newsvendor Model
-- [] Period Review(重点在safety stock)
+- [x] Period Review(重点在safety stock)
 - [] MIT SCMx 总结
 - [] supply chain dynamics material review
 
@@ -28,6 +28,8 @@ draft = true
 - [] advent of code 2021(start Dec.1)
 - [] python
 - [] VBA
+- [] timeSeries analysis with python and pandas
+- [] seasonality analysis with python
 
 #### Reading
 - [] Inoreader piece
