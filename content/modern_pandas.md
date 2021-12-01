@@ -14,7 +14,7 @@ Tags = ["Python", "Pandas"]
 ## Method Chain
 
 先看一段样例代码
-```
+```Python
 # above have createde a dataframe
 df.drop_duplicates(subset=['col1'], keep='first')
 
@@ -34,7 +34,7 @@ df4['price'] = df4['price'].apply(clean_price)
 这时候可以使用`pandas.DataFrame.method chain`来优化处理。
 
 Pandas DataFrame 的 method chain，可以把多个方法放在一起。上述代码可以改写为：
-```
+```Python
 def clean_saleType(df):
     # do some cleaning
     return df
@@ -59,7 +59,7 @@ df = (df.rename(columns={'old_name': 'new_name'})
 
 `DataFrame.assign(**kwargs)` 作为`df['key'] = value`的替代，用来添加/替换列，且直接返回一个新的DataFrame对象，默认不会修改原有的DataFrame。
 比如
-```
+```Python
 df_copy = df.copy()
 df['key1'] = value1
 df['key2'] = value2
@@ -74,7 +74,7 @@ df = df.assign(key1=value1, key2=value2)
 ### DataFrame.pipe
 
 `df.pipe(func)`等价于`func(df)`，但是`df.pipe(func)`的优势在于，当连续调用多个方法的时候，可以使用类似 pipeline的写法，提高可读性。比如：
-```
+```Python
 dfa = func1(df, arg1=v1)
 dfb = func2(dfb, v2, arg3=v3)
 dfc = func3(dfb, arg4=v4)
@@ -96,7 +96,7 @@ df = (df.pipe(func1, arg1=v1)
 
 ### TimeSeries Slice
 
-```
+```Python
 dates = [datetime(2021, 1, 2), datetime(2021, 1, 5),
          datetime(2021, 1, 7), datetime(2021, 1, 8),
          datetime(2021, 1, 10), datetime(2021, 1, 12)]
