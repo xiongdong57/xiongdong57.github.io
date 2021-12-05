@@ -257,3 +257,71 @@ def day04_2(nums, boards):
 ```
 
 If this puzzle is more complex, maybe numpy is a good way to go.
+
+## day05
+For lines:  
+0,9 -> 5,9  
+8,0 -> 0,8  
+9,4 -> 3,4  
+2,2 -> 2,1  
+7,0 -> 7,4  
+6,4 -> 2,0  
+0,9 -> 2,9  
+3,4 -> 1,4  
+0,0 -> 8,8  
+5,5 -> 8,2  
+
+you need to determine the number of points where at least two lines overlap.
+
+part1: Consider only horizontal and vertical lines. At how many points do at least two lines overlap?
+
+part2: Because of the limits of the hydrothermal vent mapping system, the lines in your list will only ever be horizontal, vertical, or a diagonal line at exactly 45 degrees.Consider all of the lines. How many points do at least two lines overlap?
+
+```Python
+def gen_line_points(x1, y1, x2, y2, diagonal_line=False):
+    points = []
+    x_min = min(x1, x2)
+    x_max = max(x1, x2)
+    y_min = min(y1, y2)
+    y_max = max(y1, y2)
+    if x1 == x2:
+        for y in range(y_min, y_max + 1):
+            points.append((x1, y))
+    elif y1 == y2:
+        for x in range(x_min, x_max + 1):
+            points.append((x, y1))
+    elif diagonal_line:
+        ascending = ((x1 == x_min and y1 == y_min) or
+                     (x2 == x_min and y2 == y_min))
+        for x in range(x_min, x_max + 1):
+            if ascending:
+                points.append((x, y_min + (x - x_min)))
+            else:
+                points.append((x, y_max - (x - x_min)))
+    return points
+
+
+def solve(data, diagnoal_line):
+    picture = defaultdict(int)
+    for line in data:
+        x1, y1, x2, y2 = [int(elem) for elem in line]
+        for point in gen_line_points(x1, y1, x2, y2,
+                                     diagonal_line=diagnoal_line):
+            picture[point] += 1
+    return sum(1 for value in picture.values() if value > 1)
+
+
+def day05_1(data):
+    return solve(data, diagnoal_line=False)
+
+
+def day05_2(data):
+    return solve(data, diagnoal_line=True)
+
+
+data = parse_data(day=5,
+                  parser=lambda x: re.findall(
+                    r'(\d+),(\d+) -> (\d+),(\d+)', x)[0])
+```
+
+Data structure is really a key thing to solve the problem with simple and clean solution.
