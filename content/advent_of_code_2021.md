@@ -175,3 +175,85 @@ def day03_2(data):
 
 data = parse_data(day=3, parser=str)
 ```
+
+## day04
+
+Bingo is played on a set of boards each consisting of a 5x5 grid of numbers. Numbers are chosen at random, and the chosen number is marked on all boards on which it appears. (Numbers may not appear on all boards.) If all numbers in any row or any column of a board are marked, that board wins.
+
+Input be like:  
+7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
+
+22 13 17 11  0  
+ 8  2 23  4 24  
+21  9 14 16  7  
+ 6 10  3 18  5  
+ 1 12 20 15 19  
+
+ 3 15  0  2 22  
+ 9 18 13 17  5  
+19  8  7 25 23  
+20 11 10 24  4  
+14 21 16 12  6  
+
+14 21 17 24  4  
+10 16 15  9 19  
+18  8 23 26 20  
+22 11 13  6  5  
+ 2  0 12  3  7  
+
+score is the sum of all unmarked numbers multiply that sum by the number that was just called when the board won.
+
+part1:  What will your final score be if you choose that board
+part2:  figure out which board will win last and choose that one, figure out which board will win last and choose that one
+
+```Python
+def convert_to_int(data: List):
+    return [int(elem) for elem in data]
+
+
+def parse_input():
+    data = parse_data(day=4, parser=str.splitlines, sep='\n\n')
+    nums = convert_to_int(data[0][0].split(','))
+    boards = [[convert_to_int(line.split()) for line in board]
+              for board in data[1:]]
+    return nums, boards
+
+
+def board_marks_valid(board: List[List], marked_nums: set):
+    cols = [set([row[i] for row in board])
+            for i in range(len(board[0]))]
+    rows = [set(row) for row in board]
+    lines = cols + rows
+    return any(line.issubset(marked_nums) for line in lines)
+
+
+def day04_1(nums, boards):
+    for i, num in enumerate(nums):
+        for board in boards:
+            marked_nums = set(nums[:i+1])
+            if board_marks_valid(board, marked_nums):
+                all_unmark_nums_sum = sum([elem
+                                           for row in board
+                                           for elem in row
+                                           if elem not in marked_nums])
+                return num * all_unmark_nums_sum
+
+
+def day04_2(nums, boards):
+    remain_boards = boards[:]
+    for i, num in enumerate(nums):
+        marked_nums = set(nums[:i+1])
+        remain_boards = [board
+                         for board in remain_boards
+                         if not board_marks_valid(board, marked_nums)]
+        if len(remain_boards) == 1:
+            last_board = remain_boards[0]
+        if len(remain_boards) == 0:
+            all_unmark_nums_sum = sum([elem
+                                       for row in last_board
+                                       for elem in row
+                                       if elem not in marked_nums])
+            return num * all_unmark_nums_sum
+```
+
+If this puzzle is more complex, maybe numpy is a good way to go.
