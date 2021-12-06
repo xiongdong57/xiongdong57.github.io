@@ -325,3 +325,53 @@ data = parse_data(day=5,
 ```
 
 Data structure is really a key thing to solve the problem with simple and clean solution.
+
+## day06
+
+each lanternfish creates a new lanternfish once every 7 days. you can model each fish as a single number that represents the number of days until it creates a new lanternfish.
+
+Input be like:  
+3,4,3,1,2
+
+part1: How many lanternfish would there be after 80 days?  
+part2: ow many lanternfish would there be after 256 days
+
+```Python
+def simulate(states: List):
+    new_gen_state = states.count(0) * [6, 8]
+    updated_states = [elem - 1 for elem in states if elem != 0]
+    return updated_states + new_gen_state
+
+
+def simulate_2(state: defaultdict):
+    new_state = defaultdict(int)
+    for key, value in state.items():
+        if key == 0:
+            new_state[6] += value
+            new_state[8] += value
+        else:
+            new_state[key - 1] += value
+    return new_state
+
+
+def day06_1(data):
+    state = data[:]
+    for _ in range(80):
+        state = simulate(state)
+    return len(state)
+
+
+def day06_2(data):
+    state = defaultdict(int)
+    for elem in data:
+        if elem not in state.keys():
+            state[elem] = data.count(elem)
+    for _ in range(256):
+        state = simulate_2(state)
+    return sum(state.values())
+
+data = parse_data(day=6, parser=lambda x: x.split(','))[0]
+data = convert_to_int(data)
+```
+
+Again, data structure is the key to the right solution.

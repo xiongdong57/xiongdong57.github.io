@@ -25,7 +25,7 @@ draft = true
 
 #### Programming
 - [x] pandas
-- [] advent of code 2021(start Dec.1)
+- [x] advent of code 2021(start Dec.1)
 - [] python
 - [] VBA
 - [] timeSeries analysis with python and pandas
