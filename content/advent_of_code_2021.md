@@ -375,3 +375,48 @@ data = convert_to_int(data)
 ```
 
 Again, data structure is the key to the right solution.
+
+## day07
+
+List of the horizontal position of each crab:  
+16,1,2,0,4,2,7,1,2,14
+
+part1 with rule:   
+Each change of 1 step in horizontal position of a single crab costs 1 fuel. Determine the horizontal position that the crabs can align to using the least fuel possible. 
+
+How much fuel must they spend to align to that position?
+
+part2 with rule:  
+ach change of 1 step in horizontal position costs 1 more unit of fuel than the last: the first step costs 1, the second step costs 2, the third step costs 3, and so on
+
+How much fuel must they spend to align to that position?
+
+```Python
+def fuel_cost(seq, pos):
+    return sum(abs(elem - pos) for elem in seq)
+
+
+def day07_1(data):
+    pos_min = min(data)
+    pos_max = max(data)
+    return min(fuel_cost(data, pos) for pos in range(pos_min, pos_max + 1))
+
+
+def fuel_cost_v2(seq, pos):
+    # basic math: 1 + 2 + ... + n = n(n+1)/2
+    fuels = 0
+    for elem in seq:
+        distance = abs(elem - pos)
+        fuels += int(distance * (distance + 1) / 2)
+    return fuels
+
+
+def day07_2(data):
+    pos_min = min(data)
+    pos_max = max(data)
+    return min(fuel_cost_v2(data, pos) for pos in range(pos_min, pos_max + 1))
+
+data = parse_data(day=7, parser=lambda x: x.split(','))[0]
+data = convert_to_int(data)
+```
+
