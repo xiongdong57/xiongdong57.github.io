@@ -530,3 +530,76 @@ patterns, digits = gen_data()
 ```
 
 Part1 is easy after careful understanding the matiral. Part2 first comes to DFS, then I find it's hard to mapping the iterate rule. Then when broswing reddit, someone mentioned brute force. May be  I should calc how many possible combinations and the result number is quit small(less than 10000). Finally, using brute force to solve it.
+
+
+## day09
+
+consider the following heightmap:  
+2199943210  
+3987894921  
+9856789892  
+8767896789  
+9899965678  
+
+Your first goal is to find the low points - the locations that are lower than any of its adjacent locations.Most locations have four adjacent locations (up, down, left, and right). The risk level of a low point is 1 plus its height.  
+
+Part1: What is the sum of the risk levels of all low points on your heightmap?
+
+A basin is all locations that eventually flow downward to a single low point. Therefore, every low point has a basin, although some basins are very small. Locations of height 9 do not count as being in any basin, and all other locations will always be part of exactly one basin.
+
+The size of a basin is the number of locations within the basin, including the low point.
+
+Part2: What do you get if you multiply together the sizes of the three largest basins?
+
+```Python
+def is_lowest_adjacent(height_map, loc):
+    x, y = loc
+    height = height_map[loc]
+    # only consider up, down, left and right
+    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+    return all(height_map.get((x+dx, y+dy), 9) > height
+               for dx, dy in directions)
+
+
+def make_map(data):
+    height_map = defaultdict(int)
+    for row in range(len(data)):
+        for col in range(len(data[row])):
+            height_map[(row, col)] = int(data[row][col])
+    return height_map
+
+
+def day09_1(data):
+    height_map = make_map(data)
+    risk_level = 0
+    for loc, height in height_map.items():
+        if is_lowest_adjacent(height_map, loc):
+            risk_level += height + 1
+    return risk_level
+
+
+def visit_basins(height_map, loc, visited=[]):
+    # BFS
+    visited.append(loc)
+    x, y = loc
+    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+    for dx, dy in directions:
+        new_loc = (x+dx, y+dy)
+        if (new_loc not in visited and
+           new_loc in height_map and
+           height_map.get(new_loc) < 9):
+            visit_basins(height_map, new_loc, visited)
+    return len(visited)
+
+
+def day09_2(data):
+    height_map = make_map(data)
+    basins = []
+    for loc in height_map.keys():
+        if is_lowest_adjacent(height_map, loc):
+            basins.append(visit_basins(height_map, loc, []))
+    basins = sorted(basins, reverse=True)
+    return basins[0] * basins[1] * basins[2]
+```
+
+Today is a simple useage of BFS.
