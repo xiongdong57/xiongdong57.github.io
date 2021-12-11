@@ -18,7 +18,7 @@ def parse_data(day: int, parser=str, sep='\n'):
         return [parser(line) for line in f.read().split(sep)]
 ```
 
-## day01
+## [day01](https://adventofcode.com/2021/day/1)
 You had the following report:  
 199  
 200  
@@ -48,7 +48,7 @@ def day01_2(data):
     return day01_1(data_with_3_window)
 ```
 
-## day02
+## [day02](https://adventofcode.com/2021/day/2)
 
 Input be like:   
 forward 5  
@@ -105,7 +105,7 @@ def day02_2(data):
 data = parse_data(day=2, parser=lambda x: x.split(' '))
 ```
 
-## day03
+## [day03](https://adventofcode.com/2021/day/3)
 
 Input be like:
 00100  
@@ -176,7 +176,7 @@ def day03_2(data):
 data = parse_data(day=3, parser=str)
 ```
 
-## day04
+## [day04](https://adventofcode.com/2021/day/4)
 
 Bingo is played on a set of boards each consisting of a 5x5 grid of numbers. Numbers are chosen at random, and the chosen number is marked on all boards on which it appears. (Numbers may not appear on all boards.) If all numbers in any row or any column of a board are marked, that board wins.
 
@@ -258,7 +258,7 @@ def day04_2(nums, boards):
 
 If this puzzle is more complex, maybe numpy is a good way to go.
 
-## day05
+## [day05](https://adventofcode.com/2021/day/5)
 For lines:  
 0,9 -> 5,9  
 8,0 -> 0,8  
@@ -326,7 +326,7 @@ data = parse_data(day=5,
 
 Data structure is really a key thing to solve the problem with simple and clean solution.
 
-## day06
+## [day06](https://adventofcode.com/2021/day/6)
 
 each lanternfish creates a new lanternfish once every 7 days. you can model each fish as a single number that represents the number of days until it creates a new lanternfish.
 
@@ -376,7 +376,7 @@ data = convert_to_int(data)
 
 Again, data structure is the key to the right solution.
 
-## day07
+## [day07](https://adventofcode.com/2021/day/7)
 
 List of the horizontal position of each crab:  
 16,1,2,0,4,2,7,1,2,14
@@ -420,7 +420,7 @@ data = parse_data(day=7, parser=lambda x: x.split(','))[0]
 data = convert_to_int(data)
 ```
 
-## day08
+## [day08](https://adventofcode.com/2021/day/8)
 
 Input be like:  
 acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf
@@ -532,7 +532,7 @@ patterns, digits = gen_data()
 Part1 is easy after careful understanding the matiral. Part2 first comes to DFS, then I find it's hard to mapping the iterate rule. Then when broswing reddit, someone mentioned brute force. May be  I should calc how many possible combinations and the result number is quit small(less than 10000). Finally, using brute force to solve it.
 
 
-## day09
+## [day09](https://adventofcode.com/2021/day/9)
 
 consider the following heightmap:  
 2199943210  
@@ -605,7 +605,7 @@ def day09_2(data):
 Today is a simple useage of BFS.
 
 
-## [day10](https://adventofcode.com/2019/day/10)
+## [day10](https://adventofcode.com/2021/day/10)
 
 From today, I will not decribe the puzzle, the complete description will be linked.
 
@@ -663,4 +663,84 @@ def day10_2(data):
     return sorted(scores)[middle_index]
 ```
 
-A simple usage of recursion.
+A simple usage of recursion. Another approach is to use stack, if the c is open_close, put it into stack, if the c is close_open, pop the stack, after line is completed, the stack should be reduced to corupted and incomplete. And you can here to return the flag of the corupted and incomplete.
+
+## [day11](https://adventofcode.com/2021/day/11)
+
+Input be like a 10*10 number map, after each iteration, the num changes follow the rule:
+- First, the energy level of each octopus increases by 1.
+- Then, any octopus with an energy level greater than 9 flashes. This increases the energy level of all adjacent octopuses by 1, including octopuses that are diagonally adjacent. If this causes an octopus to have an energy level greater than 9, it also flashes. This process continues as long as new octopuses keep having their energy level increased beyond 9. (An octopus can only flash at most once per step.)
+- Finally, any octopus that flashed during this step has its energy level set to 0, as it used all of its energy to flash.
+
+```Python
+def make_map(data):
+    energy_map = defaultdict(int)
+    for row in range(len(data)):
+        for col in range(len(data[row])):
+            energy_map[(row, col)] = int(data[row][col])
+    return energy_map
+
+
+def get_neighbors(loc, energy_map):
+    x, y = loc
+    directions = [(0, 1), (1, 1), (1, 0), (1, -1),
+                  (0, -1), (-1, -1), (-1, 0), (-1, 1)]
+    return [(x + dx, y + dy)
+            for dx, dy in directions
+            if (x + dx, y + dy) in energy_map]
+
+
+def update_map(energy_map, flashed=[]):
+    energy_map = energy_map.copy()
+    for loc, energy in energy_map.items():
+        if energy > 9 and loc not in flashed:
+            for neighbor in get_neighbors(loc, energy_map):
+                if neighbor not in flashed:
+                    energy_map[neighbor] += 1
+            flashed.append(loc)
+    if all(eneryg <= 9 for loc, eneryg in energy_map.items()
+       if loc not in flashed):
+        return energy_map
+    else:
+        return update_map(energy_map, flashed)
+
+
+def simulate(energy_map):
+    flashes = 0
+    energy_map = energy_map.copy()
+    for loc, enery in energy_map.items():
+        energy_map[loc] = enery + 1
+    energy_map = update_map(energy_map, [])
+    for loc, energy in energy_map.items():
+        if energy > 9:
+            energy_map[loc] = 0
+            flashes += 1
+    return flashes, energy_map
+
+
+def day11_1(data):
+    energy_map = make_map(data)
+    all_flashes = 0
+    for _ in range(100):
+        flashes, energy_map = simulate(energy_map)
+        all_flashes += flashes
+    return all_flashes
+
+
+def day11_2(data):
+    energy_map = make_map(data)
+    counter = 0
+    while True:
+        counter += 1
+        _, energy_map = simulate(energy_map)
+        if all(energy == 0 for energy in energy_map.values()):
+            return counter
+```
+
+For part one, I made a mistake, I think the update_map will not be recursive at first, and take some time and steps to reliaze it. After fix this, the solution is quite simple.
+
+For part two, I first thought it will be some large number, but it is not. So the solution not require much effort.
+
+Maybe next yeaer, I should build a Grid class be represent the map.
+
+When browsing the internet, I found [programmer named Jocelyn Stericker using rust to solve Advent of Code 2021](https://www.youtube.com/c/JocelynStericker) and [Peter Norvig using python to solve Advent of Code 2021](https://github.com/norvig/pytudes/blob/main/ipynb/Advent-2021.ipynb). Usually, I will solve the puzzle on my own first, then see their solution, which is often shorter and clever.
