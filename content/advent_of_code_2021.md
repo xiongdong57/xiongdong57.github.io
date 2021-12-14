@@ -744,3 +744,259 @@ For part two, I first thought it will be some large number, but it is not. So th
 Maybe next yeaer, I should build a Grid class be represent the map.
 
 When browsing the internet, I found [programmer named Jocelyn Stericker using rust to solve Advent of Code 2021](https://www.youtube.com/c/JocelynStericker) and [Peter Norvig using python to solve Advent of Code 2021](https://github.com/norvig/pytudes/blob/main/ipynb/Advent-2021.ipynb). Usually, I will solve the puzzle on my own first, then see their solution, which is often shorter and clever.
+
+## [day12](https://adventofcode.com/2021/day/12)
+
+Input be like:  
+start-A  
+start-b  
+A-c  
+A-b  
+b-d  
+A-end  
+b-end  
+
+- big caves (written in uppercase, like A) and small caves (written in lowercase, like b)
+- all paths you find should visit small caves at most once, and can visit big caves any number of times
+- part1: How many paths through this cave system are there that visit small caves at most once
+- part2: After reviewing the available paths, you realize you might have time to visit a single small cave **twice**. However, the caves named start and end can only be visited exactly once each. Given these new rules, how many paths through this cave system are there?
+
+```Python
+def gen_map(data):
+    system = defaultdict(list)
+    for start, end in data:
+        system[start].append(end)
+        system[end].append(start)
+    return system
+
+
+def path_visit(start='start', end='end', system=[], gen_node=None):
+    frontier = [[start]]
+    while frontier:
+        path = frontier.pop(0)
+        node = path[-1]
+        if node == end:
+            yield path
+        for next_node in gen_node(node, system, path):
+            path2 = path + [next_node]
+            frontier.append(path2)
+
+
+def successors(node, system, path):
+    return [node
+            for node in system[node]
+            if not(node in path and ('a' <= node[0] <= 'z'))]
+
+
+def successors_v2(node, system, path):
+    return [node
+            for node in system[node]
+            if not(
+                (path + [node]).count('start') > 1 or
+                (path + [node]).count('end') > 1 or
+                (node in path and
+                 'a' <= node[0] <= 'z' and
+                 is_biger_than_twice(path + [node]))
+            )]
+
+
+def is_biger_than_twice(path):
+    smalls = [node
+              for node in path
+              if 'a' <= node[0] <= 'z']
+    return len(smalls) - len(set(smalls)) > 1
+
+
+def day12_1(data):
+    system = gen_map(data)
+    paths = list(path_visit(start='start',
+                            end='end',
+                            system=system,
+                            gen_node=successors))
+    return len(paths)
+
+
+def day12_2(data):
+    system = gen_map(data)
+    paths = list(path_visit(start='start',
+                            end='end',
+                            system=system,
+                            gen_node=successors_v2))
+    return len(paths)
+```
+
+## [day13](https://adventofcode.com/2021/day/13)
+
+Input be like:  
+6,10  
+0,14  
+9,10  
+0,3  
+10,4  
+4,11  
+6,0  
+6,12  
+4,1  
+0,13  
+10,12  
+3,4  
+3,0  
+8,4  
+1,10  
+2,14  
+8,10  
+9,0  
+  
+fold along y=7  
+fold along x=5  
+
+- How many dots are visible after completing just the first fold instruction on your transparent paper
+- Finish folding the transparent paper according to the instructions. The manual says the code is always eight capital letters. What is the code?
+
+```Python
+def gen_data():
+    data = parse_data(day=13, parser=str, sep='\n\n')
+    dots = [line.split(',') for line in data[0].split('\n')]
+    folds = [re.findall(r'.*?(\w)=(\d+)', line)[0]
+             for line in data[1].split('\n')]
+
+    return dots, folds
+
+
+def make_map(dots):
+    system = defaultdict()
+    for x, y in dots:
+        system[(int(x), int(y))] = '#'
+    return system
+
+
+def update_dot(dota, dotb):
+    return '#' if '#' in [dota, dotb] else '.'
+
+
+def update_fold_system(system, axis, num):
+    new_system = defaultdict()
+    for (x, y), dot in system.items():
+        if axis == 'x':
+            if x <= num:
+                new_system[(x, y)] = dot
+            else:
+                new_system[(2*num - x, y)] = update_dot(system[(x, y)], dot)
+        if axis == 'y':
+            if y <= num:
+                new_system[(x, y)] = dot
+            else:
+                new_system[(x, 2*num - y)] = update_dot(system[(x, y)], dot)
+    return new_system
+
+
+def day13_1(dots, folds):
+    system = make_map(dots)
+    for axis, num in folds[:1]:
+        system = update_fold_system(system, axis, int(num))
+    return list(system.values()).count('#')
+
+
+def print_map(system):
+    x = max(system, key=lambda x: x[0])[0]
+    y = max(system, key=lambda x: x[1])[1]
+    for dy in range(y + 1):
+        for dx in range(x + 1):
+            print(system.get((dx, dy), ' '), end='')
+        print()
+    print()
+
+
+def day13_2(dots, folds):
+    system = make_map(dots)
+    for axis, num in folds:
+        system = update_fold_system(system, axis, int(num))
+    # ZKAUCFUC
+    print_map(system)
+```
+
+## [day14](https://adventofcode.com/2021/day/14)
+
+Input is two part, first is the polymer template, second is a list of pair insertion rules. For example:  
+NNCB  
+  
+CH -> B  
+HH -> N  
+CB -> H  
+NH -> C  
+HB -> C  
+HC -> B  
+HN -> C  
+NN -> C  
+BH -> H  
+NC -> B  
+NB -> B  
+BN -> B  
+BB -> N  
+BC -> B  
+CC -> N  
+CN -> C  
+
+- part1: after 10 steps, what is quantity of the most common element and subtract the quantity of the least common element
+- part2: after 400 steps, what is quantity of the most common element and subtract the quantity of the least common element
+
+```Python
+def gen_data():
+    pair_insertion_ruls = defaultdict()
+    data = parse_data(day=14, sep='\n\n')
+    template = data[0]
+    for line in data[1].split('\n'):
+        key, val = line.split(' -> ')
+        pair_insertion_ruls[key] = val
+    return template, pair_insertion_ruls
+
+
+def simulate(template, pair_insertion_ruls):
+    new_template = ''
+    for i in range(len(template) - 1):
+        left_char = template[i]
+        right_char = template[i + 1]
+        insert_char = pair_insertion_ruls[left_char + right_char]
+        new_template += left_char + insert_char
+    new_template += template[-1]
+    return new_template
+
+
+def day14_1(template, pair_insertion_ruls):
+    for _ in range(10):
+        template = simulate(template, pair_insertion_ruls)
+
+    counter = Counter(template)
+    most_common = counter.most_common(1)[0][1]
+    least_common = counter.most_common()[-1][1]
+    return most_common - least_common
+
+
+def day14_2(template, pair_insertion_ruls):
+    symbols_occurences = defaultdict(int)
+    for x in template:
+        symbols_occurences[x] += 1
+
+    twograms_occurences = defaultdict(int)
+    for i in range(len(template) - 1):
+        x = template[i]
+        y = template[i + 1]
+        twograms_occurences[x + y] += 1
+
+    for _ in range(40):
+        new_insertions = []
+        for pair, symbol in pair_insertion_ruls.items():
+            if pair in twograms_occurences:
+                new_insertions.append(
+                    (pair, symbol, twograms_occurences[pair]))
+                del twograms_occurences[pair]
+        for pair, symbol, cnt in new_insertions:
+            symbols_occurences[symbol] += cnt
+            twograms_occurences[pair[0] + symbol] += cnt
+            twograms_occurences[symbol + pair[1]] += cnt
+    return max(symbols_occurences.values()) - min(symbols_occurences.values())
+```
+
+The idea to solve part 1 is to simulate and store the template, which works fine. But for part 2 the length of final template is more than 2 trillion. There is no data strutures to store it, so a different approach is needed.
+
+Part 2 is mostly reference some great post on this [subreddit](https://www.reddit.com/r/adventofcode/).
