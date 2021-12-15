@@ -8,7 +8,7 @@ Categories = ["Programming"]
 Tags = ["Python"]
 +++
 
-This year I will do [Advent of Code 2021](https://adventofcode.com/). Considering my programming skills, Python will be used. This article will record simple descriptions of the problems, some of my solution and little notes, which should be updated everyday between December 1st and December 25th. The complete code and data will be available on [GitHub](https://github.com/xiongdong57/AdventofCode2021).
+This year I will do [Advent of Code 2021](https://adventofcode.com/). Considering my programming skills, Python will be used. This article will record simple descriptions of the problems, some of my solution and little notes, which should be updated everyday between December 1st and December 25th. The complete code and data be available on [GitHub](https://github.com/xiongdong57/AdventofCode2021).
 <!-- more -->
 
 ## utils.py
@@ -18,7 +18,7 @@ def parse_data(day: int, parser=str, sep='\n'):
         return [parser(line) for line in f.read().split(sep)]
 ```
 
-## [day01](https://adventofcode.com/2021/day/1)
+## [Day 1: Sonar Sweep](https://adventofcode.com/2021/day/1)
 You had the following report:  
 199  
 200  
@@ -48,7 +48,7 @@ def day01_2(data):
     return day01_1(data_with_3_window)
 ```
 
-## [day02](https://adventofcode.com/2021/day/2)
+## [Day 2: Dive!](https://adventofcode.com/2021/day/2)
 
 Input be like:   
 forward 5  
@@ -105,7 +105,7 @@ def day02_2(data):
 data = parse_data(day=2, parser=lambda x: x.split(' '))
 ```
 
-## [day03](https://adventofcode.com/2021/day/3)
+## [Day 3: Binary Diagnostic](https://adventofcode.com/2021/day/3)
 
 Input be like:
 00100  
@@ -176,7 +176,7 @@ def day03_2(data):
 data = parse_data(day=3, parser=str)
 ```
 
-## [day04](https://adventofcode.com/2021/day/4)
+## [Day 4: Giant Squid](https://adventofcode.com/2021/day/4)
 
 Bingo is played on a set of boards each consisting of a 5x5 grid of numbers. Numbers are chosen at random, and the chosen number is marked on all boards on which it appears. (Numbers may not appear on all boards.) If all numbers in any row or any column of a board are marked, that board wins.
 
@@ -258,7 +258,7 @@ def day04_2(nums, boards):
 
 If this puzzle is more complex, maybe numpy is a good way to go.
 
-## [day05](https://adventofcode.com/2021/day/5)
+## [Day 5: Hydrothermal Venture](https://adventofcode.com/2021/day/5)
 For lines:  
 0,9 -> 5,9  
 8,0 -> 0,8  
@@ -326,9 +326,9 @@ data = parse_data(day=5,
 
 Data structure is really a key thing to solve the problem with simple and clean solution.
 
-## [day06](https://adventofcode.com/2021/day/6)
+## [Day 6: Lanternfish](https://adventofcode.com/2021/day/6)
 
-each lanternfish creates a new lanternfish once every 7 days. you can model each fish as a single number that represents the number of days until it creates a new lanternfish.
+Each lanternfish creates a new lanternfish once every 7 days and a new lanternfish need slightly longer before it's capable of producing more lanternfish: two more days for its first cycle. We model each fish as a single number that represents the number of days until it creates a new lanternfish.
 
 Input be like:  
 3,4,3,1,2
@@ -376,7 +376,7 @@ data = convert_to_int(data)
 
 Again, data structure is the key to the right solution.
 
-## [day07](https://adventofcode.com/2021/day/7)
+## [Day 7: The Treachery of Whales](https://adventofcode.com/2021/day/7)
 
 List of the horizontal position of each crab:  
 16,1,2,0,4,2,7,1,2,14
@@ -420,7 +420,7 @@ data = parse_data(day=7, parser=lambda x: x.split(','))[0]
 data = convert_to_int(data)
 ```
 
-## [day08](https://adventofcode.com/2021/day/8)
+## [Day 8: Seven Segment Search](https://adventofcode.com/2021/day/8)
 
 Input be like:  
 acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf
@@ -529,10 +529,10 @@ def day08_2(patterns, digits):
 patterns, digits = gen_data()
 ```
 
-Part1 is easy after careful understanding the matiral. Part2 first comes to DFS, then I find it's hard to mapping the iterate rule. Then when broswing reddit, someone mentioned brute force. May be  I should calc how many possible combinations and the result number is quit small(less than 10000). Finally, using brute force to solve it.
+Part1 is easy, after careful understanding the matiral. Part2 first comes to DFS, then I find it's hard to mapping the iterate rule. Then when broswing reddit, someone mentioned brute force. May be  I should calc how many possible combinations and the result number is quit small(less than 10000). Finally, using brute force to solve it.
 
 
-## [day09](https://adventofcode.com/2021/day/9)
+## [Day 9: Smoke Basin](https://adventofcode.com/2021/day/9)
 
 consider the following heightmap:  
 2199943210  
@@ -605,7 +605,7 @@ def day09_2(data):
 Today is a simple useage of BFS.
 
 
-## [day10](https://adventofcode.com/2021/day/10)
+## [Day 10: Syntax Scoring](https://adventofcode.com/2021/day/10)
 
 From today, I will not decribe the puzzle, the complete description will be linked.
 
@@ -665,9 +665,9 @@ def day10_2(data):
 
 A simple usage of recursion. Another approach is to use stack, if the c is open_close, put it into stack, if the c is close_open, pop the stack, after line is completed, the stack should be reduced to corupted and incomplete. And you can here to return the flag of the corupted and incomplete.
 
-## [day11](https://adventofcode.com/2021/day/11)
+## [Day 11: Dumbo Octopus](https://adventofcode.com/2021/day/11)
 
-Input be like a 10*10 number map, after each iteration, the num changes follow the rule:
+Input be like a 10*10 number map, represent a enery map. After each iteration, the num changes follow the rule:
 - First, the energy level of each octopus increases by 1.
 - Then, any octopus with an energy level greater than 9 flashes. This increases the energy level of all adjacent octopuses by 1, including octopuses that are diagonally adjacent. If this causes an octopus to have an energy level greater than 9, it also flashes. This process continues as long as new octopuses keep having their energy level increased beyond 9. (An octopus can only flash at most once per step.)
 - Finally, any octopus that flashed during this step has its energy level set to 0, as it used all of its energy to flash.
@@ -745,7 +745,7 @@ Maybe next yeaer, I should build a Grid class be represent the map.
 
 When browsing the internet, I found [programmer named Jocelyn Stericker using rust to solve Advent of Code 2021](https://www.youtube.com/c/JocelynStericker) and [Peter Norvig using python to solve Advent of Code 2021](https://github.com/norvig/pytudes/blob/main/ipynb/Advent-2021.ipynb). Usually, I will solve the puzzle on my own first, then see their solution, which is often shorter and clever.
 
-## [day12](https://adventofcode.com/2021/day/12)
+## [Day 12: Passage Pathing](https://adventofcode.com/2021/day/12)
 
 Input be like:  
 start-A  
@@ -756,8 +756,7 @@ b-d
 A-end  
 b-end  
 
-- big caves (written in uppercase, like A) and small caves (written in lowercase, like b)
-- all paths you find should visit small caves at most once, and can visit big caves any number of times
+- big caves (written in uppercase, like A) and small caves (written in lowercase, like b) .all paths you find should visit small caves at most once, and can visit big caves any number of times.
 - part1: How many paths through this cave system are there that visit small caves at most once
 - part2: After reviewing the available paths, you realize you might have time to visit a single small cave **twice**. However, the caves named start and end can only be visited exactly once each. Given these new rules, how many paths through this cave system are there?
 
@@ -825,9 +824,10 @@ def day12_2(data):
     return len(paths)
 ```
 
-## [day13](https://adventofcode.com/2021/day/13)
+## [Day 13: Transparent Origami](https://adventofcode.com/2021/day/13)
 
 Input be like:  
+
 6,10  
 0,14  
 9,10  
@@ -915,9 +915,10 @@ def day13_2(dots, folds):
     print_map(system)
 ```
 
-## [day14](https://adventofcode.com/2021/day/14)
+## [Day 14: Extended Polymerization](https://adventofcode.com/2021/day/14)
 
-Input is two part, first is the polymer template, second is a list of pair insertion rules. For example:  
+Input is two part, first is the polymer template, second is a list of pair insertion rules.
+
 NNCB  
   
 CH -> B  
@@ -936,6 +937,8 @@ BB -> N
 BC -> B  
 CC -> N  
 CN -> C  
+
+A rule like AB -> C means that when elements A and B are immediately adjacent, element C should be inserted between them. These insertions all happen simultaneously.Note that these pairs overlap: the second element of one pair is the first element of the next pair. Also, because all pairs are considered simultaneously, inserted elements are not considered to be part of a pair until the next step.
 
 - part1: after 10 steps, what is quantity of the most common element and subtract the quantity of the least common element
 - part2: after 400 steps, what is quantity of the most common element and subtract the quantity of the least common element
@@ -1000,3 +1003,134 @@ def day14_2(template, pair_insertion_ruls):
 The idea to solve part 1 is to simulate and store the template, which works fine. But for part 2 the length of final template is more than 2 trillion. There is no data strutures to store it, so a different approach is needed.
 
 Part 2 is mostly reference some great post on this [subreddit](https://www.reddit.com/r/adventofcode/).
+
+## [Day 15: Chiton](https://adventofcode.com/2021/day/15)
+
+Input is a 2D array of integers, representing the risk map. Such as:
+1163751742  
+1381373672  
+2136511328  
+3694931569  
+7463417111  
+1319128137  
+1359912421  
+3125421639  
+1293138521  
+2311944581  
+
+Part1: What is the lowest total risk of any path from the top left to the bottom right?
+
+Part2: The actual map is the current map repeat to right or down five times. And after each repeation, the risk are 1 higher, but risk levels above 9 wrap back around to 1. With this new information, what is the lowest total risk of any path from the top left to the bottom right?
+
+```Python
+from queue import PriorityQueue
+
+
+def make_map(data):
+    return {(row, col): int(data[row][col])
+            for row in range(len(data))
+            for col in range(len(data[row]))}
+
+
+def print_map(energy_map):
+    loc = list(energy_map.keys())[-1]
+    x, y = loc
+    for row in range(x + 1):
+        for col in range(y + 1):
+            print(energy_map[(row, col)], end='')
+        print()
+    print()
+
+
+class Graph:
+    def __init__(self, num_of_vertices):
+        self.v = num_of_vertices*num_of_vertices
+        self.edges = defaultdict()
+        self.nodes = [(i, j)
+                      for i in range(num_of_vertices)
+                      for j in range(num_of_vertices)]
+
+    def add_edge(self, u, v, weight):
+        if u in self.nodes and v in self.nodes:
+            self.edges[(u, v)] = weight
+
+    def add_edge_with_map(self, risk_map):
+        for node, risk in risk_map.items():
+            for neighbor in self.neighbors(node):
+                if neighbor in risk_map:
+                    self.edges[(neighbor, node)] = risk
+
+    def neighbors(self, loc):
+        x, y = loc
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        return [(x + dx, y + dy) for dx, dy in directions]
+
+
+def dijkstra(graph, source):
+    dist = {node: float('inf') for node in graph.nodes}
+    prev = {node: None for node in graph.nodes}
+    dist[source] = 0
+    q = PriorityQueue()
+    q.put((0, source))
+    while not q.empty():
+        u = q.get()[1]
+        for v in graph.neighbors(u):
+            if ((u, v) in graph.edges and
+               dist[v] > dist[u] + graph.edges[(u, v)]):
+                dist[v] = dist[u] + graph.edges[(u, v)]
+                q.put((dist[v], v))
+                prev[v] = u
+    return dist, prev
+
+
+def print_result(previous_nodes, shortest_path, start_node, target_node):
+    path = []
+    node = target_node
+
+    while node != start_node:
+        path.append(node)
+        node = previous_nodes[node]
+
+    # Add the start node manually
+    path.append(start_node)
+
+    print("We found the following best path with a value of {}.".format(
+        shortest_path[target_node]))
+    print(" -> ".join(str(elem) for elem in reversed(path)))
+
+
+def solver(risk_map):
+    last_element = list(risk_map.keys())[-1]
+
+    graph = Graph(last_element[0] + 1)
+    graph.add_edge_with_map(risk_map)
+
+    source = list(risk_map.keys())[0]
+
+    dist, _ = dijkstra(graph, source)
+    return dist[last_element]
+
+
+def day15_1(data):
+    risk_map = make_map(data)
+    return solver(risk_map)
+
+
+def below_to_nine(num):
+    return num % 9 if num != 9 else 9
+
+
+def extend_map(risk_map):
+    new_risk_map = defaultdict(int)
+    dimension = list(risk_map.keys())[-1][0] + 1
+    for i in range(5):
+        for loc, risk in risk_map.items():
+            new_risk_map[(loc[0], loc[1]+i*dimension)] = below_to_nine(risk+i)
+    final_map = defaultdict(int)
+    for i in range(5):
+        for loc, risk in new_risk_map.items():
+            final_map[(loc[0] + i*dimension, loc[1])] = below_to_nine(risk+i)
+    return final_map
+```
+
+Today I learned about the Dijkstra's algorithm, which is used to find the shortest path between two nodes in a graph. Since I know little about it, a lot of time was spent on the algorithm. But after implementing it, the code become much easier.
