@@ -1290,3 +1290,70 @@ def day16_2(data):
 It's a long day, since there are so many rules to parse the packets. The tricky part is to figure out the data structure to represent the packets. After relizing the packet may be recursive containing other packet, I finally choose json-like data structure to store the packets. 
 
 The code is a little bit messy, maybe I will refactor it later or maybe not.
+
+## [Day 17: Trick Shot](http://adventofcode.com/2021/day/17)
+
+Input represents the an area of grid, which covered by trajectory. The probe starts from (0, 0), with each iter, the location change by rule with velocity who's loc also change ervery step. The velocity is represented by a tuple of (x, y). For special velocity, the probe will within or not within the target area after some steps.
+
+Part1: Find the initial velocity that causes the probe to reach the highest y position and still eventually be within the target area after any step. What is the highest y position it reaches on this trajectory.
+
+Part2: How many distinct initial velocity values cause the probe to be within the target area after any step
+
+```python
+def move_once(probe_loc, velocity):
+    x, y = probe_loc
+    dx, dy = velocity
+    new_probe_loc = (x + dx, y + dy)
+    if dx == 0:
+        new_velocity_x = dx
+    elif dx > 0:
+        new_velocity_x = dx - 1
+    else:
+        new_velocity_x = dx + 1
+    new_velocity = (new_velocity_x, dy - 1)
+    return new_probe_loc, new_velocity
+
+
+def simulate(x0, x1, y0, y1, velocity):
+    probe_loc = (0, 0)
+    path = []
+    while True:
+        probe_loc, velocity = move_once(probe_loc, velocity)
+        path.append(probe_loc)
+        x, y = probe_loc
+        if x > x1 or y < y0:
+            within_target = any(x0 <= x <= x1 and
+                                y0 <= y <= y1
+                                for x, y in path)
+            return within_target, path
+
+
+def solver(x0, x1, y0, y1):
+    mem = {(x, y): simulate(x0, x1, y0, y1, (x, y))
+           for x in range(-x1 - 1, x1 + 1)
+           for y in range(y0 - 1, -y0 + 1)}
+    return mem
+
+
+def day17_1(x0, x1, y0, y1):
+    mem = solver(x0, x1, y0, y1)
+    mem = {k: max(elem[1] for elem in v[1])
+           for k, v in mem.items()
+           if v[0]}
+    max_loc = max(mem, key=mem.get)
+    return mem[max_loc]
+
+
+def day17_2(x0, x1, y0, y1):
+    mem = solver(x0, x1, y0, y1)
+    mem = {k: v for k, v in mem.items() if v[0]}
+    return len(mem.keys())
+
+data = parse_data(day=17,
+                    parser=lambda x: re.findall(
+                        r'.*?x=(\d+)..(\d+), y=-(\d+)..-(\d+)', x))
+x0, x1, y0, y1 = data[0][0]
+x0, x1, y0, y1 = int(x0), int(x1), -int(y0), -int(y1)
+```
+
+Using brute force to solve this problem, 
