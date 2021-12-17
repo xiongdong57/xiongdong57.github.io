@@ -1131,6 +1131,162 @@ def extend_map(risk_map):
         for loc, risk in new_risk_map.items():
             final_map[(loc[0] + i*dimension, loc[1])] = below_to_nine(risk+i)
     return final_map
+
+
+def day15_2(data):
+    risk_map = make_map(data)
+    risk_map = extend_map(risk_map)
+    return solver(risk_map)
 ```
 
 Today I learned about the Dijkstra's algorithm, which is used to find the shortest path between two nodes in a graph. Since I know little about it, a lot of time was spent on the algorithm. But after implementing it, the code become much easier.
+
+## [Day 16: Packet Decoder](https://adventofcode.com/2021/day/16)
+
+You have a hexadecimal input string(such as: D2FE28), first it will be convert to binary, follow a rule(such as: A=1010) which could be parse into data and oporation packet.
+
+Part1: Decode the structure of your hexadecimal-encoded BITS transmission; what do you get if you add up the version numbers in all packets?
+
+Part2: With the given operation rule, What do you get if you evaluate the expression represented by your hexadecimal-encoded BITS transmission?
+
+```Python
+hex_map = {
+    "0": "0000",
+    "1": "0001",
+    "2": "0010",
+    "3": "0011",
+    "4": "0100",
+    "5": "0101",
+    "6": "0110",
+    "7": "0111",
+    "8": "1000",
+    "9": "1001",
+    "A": "1010",
+    "B": "1011",
+    "C": "1100",
+    "D": "1101",
+    "E": "1110",
+    "F": "1111"
+}
+
+
+def parse_literals(bits):
+    five_bits = bits[:5]
+    if five_bits[0] == '0':
+        return five_bits
+    return five_bits + parse_literals(bits[5:])
+
+
+def parse_packets(bits):
+    version = int(bits[:3], 2)
+    type_ID = int(bits[3:6], 2)
+    if type_ID == 4:
+        # literal value
+        num_bits = parse_literals(bits[6:])
+        num_filted = ''.join(num_bits[i]
+                             for i in range(len(num_bits))
+                             if i % 5 != 0)
+        num = int(num_filted, 2)
+        return {"version": version,
+                "type_ID": type_ID,
+                "literal": num,
+                "sub-packets": None,
+                "bits": bits[:6] + num_bits}
+    else:
+        # an operator
+        bit_label = bits[6]
+        if bit_label == '0':
+            total_sub_length = int(bits[7:7+15], 2)
+            sub_bits = bits[7+15:]
+            occupy_bits = bits[:7+15]
+            sub_packets = []
+            while True:
+                sub = parse_packets(sub_bits)
+                sub_packets.append(sub)
+                sub_bits = sub_bits[len(sub["bits"]):]
+                occupy_bits += bits[len(occupy_bits):
+                                    len(occupy_bits)+len(sub["bits"])]
+                if (sum(len(sub["bits"]) for sub in sub_packets)
+                   >= total_sub_length):
+                    return {"version": version,
+                            "type_ID": type_ID,
+                            "operator": bit_label,
+                            "sub-packets": sub_packets,
+                            "bits": occupy_bits}
+        elif bit_label == '1':
+            num_sub_packets = int(bits[7:7+11], 2)
+            sub_bits = bits[7+11:]
+            occupy_bits = bits[:7+11]
+            sub_packets = []
+            for _ in range(num_sub_packets):
+                sub = parse_packets(sub_bits)
+                sub_packets.append(sub)
+                sub_bits = sub_bits[len(sub["bits"]):]
+                occupy_bits += bits[len(occupy_bits):
+                                    len(occupy_bits)+len(sub["bits"])]
+            return {"version": version,
+                    "type_ID": type_ID,
+                    "operator": bit_label,
+                    "sub-packets": sub_packets,
+                    "bits": occupy_bits}
+
+
+def sum_version(packets):
+    if not packets["sub-packets"]:
+        return packets["version"]
+    else:
+        return packets["version"] + sum(sum_version(sub)
+                                        for sub in packets["sub-packets"])
+
+
+def day16_1(data):
+    bits = ''.join(hex_map[elem] for elem in data[0])
+    packets = parse_packets(bits)
+    return sum_version(packets)
+
+
+def evaluate(packets):
+    if packets["type_ID"] == 4:
+        return packets["literal"]
+    elif packets["type_ID"] == 0:
+        # sum
+        return sum(evaluate(sub) for sub in packets["sub-packets"])
+    elif packets["type_ID"] == 1:
+        # product
+        return reduce(lambda x, y: x*y,
+                      [evaluate(sub) for sub in packets["sub-packets"]])
+    elif packets["type_ID"] == 2:
+        # min
+        return min(evaluate(sub) for sub in packets["sub-packets"])
+    elif packets["type_ID"] == 3:
+        # max
+        return max(evaluate(sub) for sub in packets["sub-packets"])
+    elif packets["type_ID"] == 5:
+        # greater than
+        return (1
+                if (evaluate(packets["sub-packets"][0]) >
+                    evaluate(packets["sub-packets"][1]))
+                else 0)
+    elif packets["type_ID"] == 6:
+        # less than
+        return (1
+                if (evaluate(packets["sub-packets"][0]) <
+                    evaluate(packets["sub-packets"][1]))
+                else 0)
+    elif packets["type_ID"] == 7:
+        # equal
+        return (1
+                if (evaluate(packets["sub-packets"][0]) ==
+                    evaluate(packets["sub-packets"][1]))
+                else 0)
+
+
+def day16_2(data):
+    bits = ''.join(hex_map[elem] for elem in data[0])
+    packets = parse_packets(bits)
+    return evaluate(packets)
+```
+
+It's a long day, since there are so many rules to parse the packets. The tricky part is to figure out the data structure to represent the packets. After relizing the packet may be recursive containing other packet, I finally choose json-like data structure to store the packets. 
+
+The code is a little bit messy, maybe I will refactor it later or maybe not.
