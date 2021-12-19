@@ -428,7 +428,7 @@ acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb c
 before | is the 0-9 numbers, after | can be translate to digits.
 
 Code be like:
-
+```text
   0:      1:      2:      3:      4:  
  aaaa    ....    aaaa    aaaa    ....  
 b    c  .    c  .    c  .    c  b    c  
@@ -446,7 +446,7 @@ b    .  b    .  .    c  b    c  b    c
 .    f  e    f  .    f  e    f  .    f  
 .    f  e    f  .    f  e    f  .    f  
  gggg    gggg    ....    gggg    gggg  
-
+```
 part1: In the output values, how many times do digits 1, 4, 7, or 8 appear?(hints: 1, 4, 7, 8 use a unique number of segments)
 
 part2: For each entry, determine all of the wire/segment connections and decode the four-digit output values. What do you get if you add up all of the output values?
@@ -1356,4 +1356,238 @@ x0, x1, y0, y1 = data[0][0]
 x0, x1, y0, y1 = int(x0), int(x1), -int(y0), -int(y1)
 ```
 
-Using brute force to solve this problem, 
+Using brute force to solve this problem.
+
+## [Day 18: Snailfish](http://adventofcode.com/2021/day/18)
+
+This is a special math.
+
+- formal be like: [[1,9],[8,5]]
+- each formal must be reduced by the rule:
+    - If any pair is nested inside four pairs, the leftmost such pair explodes
+    - If any pair is nested inside four pairs, the leftmost such pair explodes
+    - During reduction, at most one action applied
+    - To explode a pair, the pair's left value is added to the first regular number to the left of the exploding pair (if any), and the pair's right value is added to the first regular number to the right of the exploding pair (if any)
+    - To split a regular number, replace it with a pair; the left element of the pair should be the regular number divided by two and rounded down, while the right element of the pair should be the regular number divided by two and rounded up
+- The magnitude of a pair is 3 times the magnitude of its left element plus 2 times the magnitude of its right element
+
+Part1： Add up all of the snailfish numbers from the homework assignment in the order they appear. What is the magnitude of the final sum?
+
+Part2: The magnitude of a pair is 3 times the magnitude of its left element plus 2 times the magnitude of its right element?
+
+```Python
+def gen_explode_parts(exp):
+    depth = 0
+    for i, char in enumerate(exp):
+        if char == '[':
+            depth += 1
+        elif char == ']':
+            depth -= 1
+
+        if depth == 5:
+            break
+
+    for j, char in enumerate(exp[i:]):
+        if char == ']':
+            break
+
+    if depth == 5:
+        # pair within four pairs, left part and right part
+        return exp[i:i+j+1], exp[:i], exp[i+j+1:]
+    else:
+        return None, None, None
+
+
+def explode(exp):
+    def add_left(m):
+        return str(int(m.group(0)) + left_num)
+
+    def add_right(m):
+        return str(int(m.group(0)) + right_num)
+
+    exp = str(exp)
+    exp_four_pair, left_exp, right_exp = gen_explode_parts(exp)
+    if not exp_four_pair:
+        return exp
+
+    left_num, right_num = ast.literal_eval(exp_four_pair)
+    exp_left = re.sub(r"\d+(?=\D*$)", add_left, left_exp)
+    exp_right = re.sub(r"\d+", add_right, right_exp, count=1)
+
+    final_exp = exp_left + '0' + exp_right
+    return ast.literal_eval(final_exp)
+
+
+def split(exp):
+    def subsplit(m):
+        num = int(m.group(0))
+        return f"[{math.floor(int(num) / 2)},{math.ceil(num / 2)}]"
+
+    exp = str(exp)
+    out = re.sub(r"\d{2}", subsplit, exp, count=1)
+    return ast.literal_eval(out)
+
+
+def add(a, b):
+    return [a, b]
+
+
+def reduce(exp):
+    out = explode(exp)
+    if str(out) == str(exp):
+        # explode until there is no explode and then split
+        out = split(exp)
+
+    if str(out) == str(exp):
+        return exp
+    else:
+        return reduce(out)
+
+
+def calc_magnitude(exp):
+    def magnitude(m):
+        a = ast.literal_eval(m.group(0))
+        return str(a[0] * 3 + a[1] * 2)
+
+    exp = str(exp)
+    out = re.sub(r'\[\d+, \d+\]', magnitude, exp)
+    out = ast.literal_eval(out)
+
+    if isinstance(out, list):
+        return calc_magnitude(out)
+    else:
+        return out
+
+
+def day18_1(data):
+    data = copy.deepcopy(data)
+    running = data.pop(0)
+    while data:
+        next_add = data.pop(0)
+        running = add(running, next_add)
+        running = reduce(running)
+    return calc_magnitude(running)
+
+
+def day18_2(data):
+    scores = []
+    for elem in combinations(data, 2):
+        left, right = elem
+        score1 = calc_magnitude(reduce(add(left, right)))
+        score2 = calc_magnitude(reduce(add(right, left)))
+        scores.append(score1)
+        scores.append(score2)
+    return max(scores)
+```
+
+At first, I use nested list to represent the formula. But after some try, I can't found a clear way to explode(split works ok). Almost giving up, then the [Aoc Subreddit](https://www.reddit.com/r/adventofcode) helped me, I see someone use tree structure to represent the formula and other people use string to represent the formula. String? Really? When I see the [code](https://topaz.github.io/paste/#XQAAAQDMCwAAAAAAAAA0m0pnuFI8c+fPp4HB1KcQKnBu+WCk1EVjq93Wu6MmEjgQZO0R0cACtyObjsZhwTf3oOb2ujEhwIrJbER41xleoj0A+3ovoDJWPmAj5gWoFfXX7qRpA49tiHhhxInXZ0x0+oBycxaAp7uOKcRuAT1PpSNaxTT4WQ+cZ6QzAKIaFJoRIvtVJPExXtg9l2G7ugtsSdLRCFtYOSLiuFwiKWw/1/2ddZ8Yk3tgNCSpfrsN9JzeJfJTLv5qM8GPToy1St2XxPrSHQPsqrI4HRKwslnQXHeVrTsSZsVOMXrEsc165FW1FQQqQqviOyw6mchlPM69/fmhh2h24RIXbOg7XHOifNyePqZA8pe5KlbNtEdgG0qhW/1DV3ZFL6Ia1nW4kgaej0OtYjGnyfZOki3E+Ik3/ZZ89mhZdsqkhtVuHNn7MqPq+KEtus2jmNwc3qMFt34fCIZykq0KHdqqQZIMmVwlja90EFoSGSmJTilsomnK6540XulRnJcVc436LIMdDnjXR5OI29V3DOxALI/zoVKtIlLBPb9R/heQOOloIL0wSaQHOKTv7vSTXrSnSaDw0/3Xs9Dz1MyT/+aEw8kLU9fOgXYJn1jgq862gXI8VXnX2toEgOLY+uWFtiE92jqzpnMSI/g7ndAcCmu5nGDcSbRa8tkaXU/TizR7t1zEruemwrQceymySnPVTyeBvaiFAcrnifZeJ4fWnjv+jTQx9ugpcV3BiEJCKKrK4f5sy+lqTUXoWzKqCBxFi++UzpaXjldOk0B8YsZxgk5N/FzoCr2gbKNJ0lcfxvFKYK3UNGa+FTcI4egAvJ7Q2p+ZDE+LXBC2XmugmS7xpOqHpde5unXSINM/MhPda1T+BopN4PFIJ1lCHi1wf6Wmeoa7otoabg7UzMuajVL7a2UE7FnrPwPbqMZWERofVM92HBTQGjahBFipL1700/DzshTrQe8x4aq5qEvfVdLXPOgn79pL/UOAmEoPJijQDzsuPynLtFksYx/cno5rsAnWNjOOvVXoun4HAC5Ky0jofhUZ8IMIcxoZhO+9FDPHE3tzJXhes+xHbf5O0bZ6ayv6Lcam0dHg8M6aQdFjB4Inzk4IzYPSksGiczXmvRBRN1WjNiHTGhxZ2E10zjXsfjr+j2cl7QGAmOHRHgotpoZwyEao+Olo9mKtrCWii6hPP1lpD3lN5tiisf9+N5KApOrVRHB9EUvVsoqqdcCnrhjgrBEgpnsKs11rSQM9rNdi8jcPsF62UEMwX6T770iWE+1dVDZPGqVunilny5ARwU7krIt/ghYWa1RZH/i5PXVgurYoFTbH6+Xq8EWjbsGfEVanLk51XvZgu9A61bjgnqRYvGCB/DujaaECyGdbyz+zsNlv4L91xBInvOtgO9z25wKuvDezgBegaW66vajmpcQU//qqsm0=), I know string will work better. So I change the solution to use string. Amazing!
+
+
+## [Day 19: Beacon Scanner](https://adventofcode.com/2021/day/19)
+
+- scanners report some beacon and the scanner may be rotated by 90 degree in xyz axes and facing positive or negative(24 different orientations). 
+- two scanners near overlapped at least 12 beacons.
+
+Part1: Assemble the full map of beacons. How many beacons are there?
+
+Part2: Assemble the full map of beacons. How many beacons are there?
+
+```Python
+class Scanner:
+    def __init__(self, beacons) -> None:
+        self.beacons = beacons
+        self.final = set()
+        self.offset = None
+
+    def xy_rotation(self):
+        yield lambda x, y, z: (x, y, z)
+        yield lambda x, y, z: (y, -x, z)
+        yield lambda x, y, z: (-x, -y, z)
+        yield lambda x, y, z: (-y, x, z)
+
+    def yz_rotation(self):
+        yield lambda x, y, z: (x, y, z)
+        yield lambda x, y, z: (x, z, -y)
+        yield lambda x, y, z: (x, -y, -z)
+        yield lambda x, y, z: (x, -z, y)
+
+    def xz_rotation(self):
+        yield lambda x, y, z: (x, y, z)
+        yield lambda x, y, z: (z, y, -x)
+        yield lambda x, y, z: (-x, y, -z)
+        yield lambda x, y, z: (-z, y, x)
+
+    def rotations(self):
+        for xy in self.xy_rotation():
+            for yz in self.yz_rotation():
+                for xz in self.xz_rotation():
+                    rotated_beacons = set()
+                    for beacon in self.beacons:
+                        rotated_beacons.add(xz(*yz(*xy(*beacon))))
+                    yield rotated_beacons
+
+    def translate(self, beacons, offset):
+        return set([(beacon[0] + offset[0],
+                    beacon[1] + offset[1],
+                    beacon[2] + offset[2]) for beacon in beacons])
+
+
+def solve(data):
+    scanners = []
+    for part in data:
+        beacons = set()
+        for line in part.split('\n'):
+            if not line.startswith('--'):
+                loc = [int(num) for num in line.split(',')]
+                beacons.add(tuple(loc))
+        scanners.append(Scanner(beacons))
+
+    scanners[0].final = scanners[0].beacons
+    scanners[0].offset = (0, 0, 0)
+
+    fixed_scanner = set()
+    fixed_scanner.add(scanners[0])
+
+    while len(fixed_scanner) < len(scanners):
+        for scanner in scanners:
+            if scanner in fixed_scanner:
+                continue
+
+            fixed_beacons = set().union(*[s.final for s in fixed_scanner])
+            for r in scanner.rotations():
+                for floc in fixed_beacons:
+                    for loc in r:
+                        offset = (floc[0] - loc[0],
+                                  floc[1] - loc[1],
+                                  floc[2] - loc[2])
+                        shifted = scanner.translate(r, offset)
+                        if len(shifted.intersection(fixed_beacons)) >= 12:
+                            scanner.final = shifted
+                            scanner.offset = offset
+                            fixed_scanner.add(scanner)
+                            break
+    return fixed_scanner, scanners
+
+
+def day19_1(data):
+    fixed_scanner, _ = solve(data)
+    return len(set().union(*[s.final for s in fixed_scanner]))
+
+
+def manhattan_distance(s1, s2):
+    loc1 = s1.offset
+    loc2 = s2.offset
+    return (abs(loc1[0] - loc2[0]) +
+            abs(loc1[1] - loc2[1]) +
+            abs(loc1[2] - loc2[2]))
+
+
+def day19_2(data):
+    _, scanners = solve(data)
+    return max(manhattan_distance(s1, s2)
+               for s1, s2 in combinations(scanners, 2))
+```
+
+Today，I cheated and not found the solution by myself, the origin code is [here](https://github.com/JamesMCo/Advent-Of-Code/tree/master/2021/19). I just understand the logic and rewrite some code.
+
+Honesty is the best policy.
