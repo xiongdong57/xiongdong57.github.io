@@ -1669,3 +1669,99 @@ The 1st step, the nine neighbors of the pixel are all ., so the binary number wi
 The 2nd step, the nine neighbors of the pixel are all #, so the binary number will be 111111111, which will change the pixel to ".". 
 
 Didn't realize that at first, so spending a lot of time to debug. Auctally, it's easy if you find out the above tricky part.
+
+
+## [Day 21: Dirac Dice](https://adventofcode.com/2021/day/21)
+
+Two player play a dirac dice game.
+
+- each player roll a dice three times
+- the player move(around 1 to 10) follow the dice number(if greater than 10, then move to 1)
+- with each move, the player's score increase by the position of the player(after move)
+
+Part1: 
+
+- the dice is deterministic with 100-sided(meaning the dice rolls 1, 2...100...1)
+- the player who's score is greater than 1000 wins
+- question: what do you get if you multiply the score of the losing player by the number of times the die was rolled during the game?
+
+Part2:
+
+- the dice is quantum, when you roll it, the universe splits into 3 copys: one where the outcome of the roll is 1, one where the outcome of the roll is 2, and one where the outcome of the roll is 3.
+- the player who's score is greater than 24 wins
+- question: find the player that wins in more universes; in how many universes does that player win?
+
+```Python
+def play_game(p_pos, p_score, dice_pos):
+    move_pos = 0
+    for i in range(3):
+        if (dice_pos + i) <= 100:
+            move_pos += (dice_pos + i)
+        else:
+            move_pos += (dice_pos + i) - 100
+
+    if (p_pos + move_pos) % 10 == 0:
+        p_pos = 10
+    else:
+        p_pos = (p_pos + move_pos) % 10
+
+    p_score += p_pos
+    dice_pos = dice_pos + 3 if (dice_pos + 3) <= 100 else dice_pos + 3 - 100
+
+    return p_pos, p_score, dice_pos
+
+
+def day21_1():
+    p1_pos, p2_pos = (7, 1)
+    p1_score, p2_score = 0, 0
+    dice_pos, dice_rolls = 1, 0
+    while True:
+        p1_pos, p1_score, dice_pos = play_game(p1_pos, p1_score, dice_pos)
+        dice_rolls += 3
+        if p1_score >= 1000:
+            return p2_score * dice_rolls
+
+        p2_pos, p2_score, dice_pos = play_game(p2_pos, p2_score, dice_pos)
+        dice_rolls += 3
+        if p2_score >= 1000:
+            return p1_score * dice_rolls
+
+
+def play_once(p_score, p_pos, rolls):
+    if (p_pos + sum(rolls)) % 10 == 0:
+        p_pos = 10
+    else:
+        p_pos = (p_pos + sum(rolls)) % 10
+    p_score += p_pos
+    return p_pos, p_score
+
+
+@lru_cache(maxsize=None)
+def count_wins(current_player, p1_pos, p1_score, p2_pos, p2_score):
+    if p1_score >= 21:
+        return 1, 0
+    if p2_score >= 21:
+        return 0, 1
+
+    wins = [0, 0]
+    for rolls in product(range(1, 4), repeat=3):
+        if current_player == 0:
+            new_pos, new_score = play_once(p1_score, p1_pos, rolls)
+            win0, win1 = count_wins(1, new_pos, new_score, p2_pos, p2_score)
+        else:
+            new_pos, new_score = play_once(p2_score, p2_pos, rolls)
+            win0, win1 = count_wins(0, p1_pos, p1_score, new_pos, new_score)
+        wins[0] += win0
+        wins[1] += win1
+    return wins
+
+
+def day21_2():
+    p1_pos, p2_pos = (7, 1)
+    p1_score, p2_score = 0, 0
+    wins = count_wins(0, p1_pos, p1_score, p2_pos, p2_score)
+    return max(wins)
+```
+
+Part one is easy, just follow the rules. Part two is kind of hard to code. I finally refrenced the solution from reddit post.
+
