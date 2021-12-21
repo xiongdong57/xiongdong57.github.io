@@ -1591,3 +1591,81 @@ def day19_2(data):
 Today，I cheated and not found the solution by myself, the origin code is [here](https://github.com/JamesMCo/Advent-Of-Code/tree/master/2021/19). I just understand the logic and rewrite some code.
 
 Honesty is the best policy.
+
+## [Day 20: Trench Map](https://adventofcode.com/2021/day/20)
+
+You get a 2D image(# represent light, . represent dark) and an algorithm(a seqence contains # and .) to enhence the image.
+
+With the enhence rule, the image(infinite) will change the light and dark pixel.
+
+- the pixel beyound the image will be initialized as dark(represent by .)
+- to determine the pixel after enhencing, combine the nine neighbors(from left-top to right-down, including itself) and convert # to 1 and . to 0
+- then convert the binary number to decimal number(such as '000100010' to 34)
+- use the decimal number to determine the pixel after enhencing(index of the algorithm)
+- all pixel change simultaneously
+
+Part1: Start with the original input image and apply the image enhancement algorithm twice, being careful to account for the infinite size of the images. How many pixels are lit in the resulting image?
+
+Part2: Start again with the original input image and apply the image enhancement algorithm 50 times. How many pixels are lit in the resulting image?
+
+```Python
+def gen_data():
+    data = parse_data(day=20, parser=str, sep='\n\n')
+    algorithm = data[0].replace('\n', '')
+    image = defaultdict()
+    for y, line in enumerate(data[1].split('\n')):
+        for x, char in enumerate(line):
+            image[(x, y)] = char
+    return algorithm, image
+
+
+def nine_locs(x, y):
+    return [(x-1, y-1), (x, y-1), (x+1, y-1),
+            (x-1, y), (x, y), (x+1, y),
+            (x-1, y+1), (x, y+1), (x+1, y+1)]
+
+
+def translate(loc, image, algorithm, step):
+    code = ''
+    for nloc in nine_locs(*loc):
+        if step % 2 == 0 and algorithm[0] == '#':
+            if nloc in image:
+                code += '1' if image.get(nloc) == '#' else '0'
+            else:
+                code += '1'
+        else:
+            code += '1' if image.get(nloc) == '#' else '0'
+    index = int(code, 2)
+    return algorithm[index]
+
+
+def simulate(image, algorithm, step):
+    new_image = defaultdict()
+    locs_to_explore = set()
+    for loc in image.keys():
+        for near_loc in nine_locs(*loc):
+            locs_to_explore.add(near_loc)
+    for loc in locs_to_explore:
+        new_image[loc] = translate(loc, image, algorithm, step)
+    return new_image
+
+
+def day20_1(algorithm, image):
+    for step in range(1, 3):
+        image = simulate(image, algorithm, step)
+    return list(image.values()).count('#')
+
+
+def day20_2(algorithm, image):
+    for step in range(1, 51):
+        image = simulate(image, algorithm, step)
+    return list(image.values()).count('#')
+```
+
+The tricky part is the algorithm start with a # and end with a ., which means the infinate pixel far away from the origin image will blink every(2 enhence steps). 
+
+The 1st step, the nine neighbors of the pixel are all ., so the binary number will be 000000000, which will change the pixel to #. 
+
+The 2nd step, the nine neighbors of the pixel are all #, so the binary number will be 111111111, which will change the pixel to ".". 
+
+Didn't realize that at first, so spending a lot of time to debug. Auctally, it's easy if you find out the above tricky part.
