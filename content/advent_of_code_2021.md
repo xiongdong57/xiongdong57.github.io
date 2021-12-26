@@ -16,6 +16,23 @@ This year I will do [Advent of Code 2021](https://adventofcode.com/). Considerin
 def parse_data(day: int, parser=str, sep='\n'):
     with open(f'input/day{day:02d}.txt') as f:
         return [parser(line) for line in f.read().split(sep)]
+
+
+def convert_to_int(data: List):
+    return [int(elem) for elem in data]
+
+
+def print_map(system, fillin='.'):
+    # print the {(x, y): val} map
+    x_max = max(system, key=lambda x: x[0])[0]
+    x_min = min(system, key=lambda x: x[0])[0]
+    y_max = max(system, key=lambda x: x[1])[1]
+    y_min = min(system, key=lambda x: x[1])[1]
+    for dy in range(y_min, y_max + 1):
+        for dx in range(x_min, x_max + 1):
+            print(system.get((dx, dy), fillin), end='')
+        print()
+    print()
 ```
 
 ## [Day 1: Sonar Sweep](https://adventofcode.com/2021/day/1)
@@ -1855,3 +1872,316 @@ def day22_2(data):
     return sum(count_dots(cube) for cube in light_cubes)
 ```
 
+## [Day 23: Amphipod](https://adventofcode.com/2021/day/23)
+
+You get a 2D map(# represents a wall, . represents an open space) of the area(below is an example). Moving each ABCD need different evergy. 
+
+Part1: Your task is to find the least energy for move everyone to it's room(ABCD as blow).
+
+```Text
+#############
+#...........#
+###B#C#B#D###
+  #A#D#C#A#
+  #########
+```
+
+Part2: The actual map is folded, a two line to the map(blow is an example). And find the least energy for move everyone to it's room.
+
+```Text
+#############
+#...........#
+###B#C#B#D###
+  #D#C#B#A#
+  #D#B#A#C#
+  #A#D#C#A#
+  #########
+```
+
+```Python
+def gen_data():
+    data = parse_data(day=23)
+    state = []
+    state.append(data[1][1])
+    for loc in range(1, 6):
+        state.append(data[1][2 * loc])
+    state.append(data[1][11])
+
+    for row in range(4):
+        for line in range(4):
+            state.append(data[line+2][3+row*2])
+    return state
+
+
+def display(state):
+    print('#############')
+    print("#" + state[0] + '.'.join(state[1:6]) + state[6] + "#")
+    for line in range(2):
+        t = "###"
+        for row in range(4):
+            t += state[7 + row + line] + '#'
+        t += '##'
+        print(t)
+    print('#############')
+
+
+def gen_state(s, a, b):
+    return s[:a] + s[b] + s[a+1:b] + s[a] + s[b+1:]
+
+
+Homes = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
+Costs = {'A': 1, 'B': 10, 'C': 100, 'D': 1000}
+
+
+def move_home(s, cost):
+    global Homes
+    global Costs
+    for hp in range(7):
+        if s[hp] == '.':
+            continue
+        i = hp
+        a = s[i]
+        r = Homes[a]
+        ofs = 7 + r*4
+        line = 3
+        while line > 0 and s[ofs+line] == a:
+            line -= 1
+        if s[ofs+line] != '.':
+            continue
+        cb = (2+line)*Costs[a]
+        # go right
+        while i < r + 1 and s[i+1] == '.':
+            cb += Costs[a]*2 if i > 0 else Costs[a]
+            i += 1
+        # go left
+        while i > r + 2 and s[i-1] == '.':
+            cb += Costs[a]*2 if i < 6 else Costs[a]
+            i -= 1
+        if i != r + 1 and i != r + 2:
+            continue
+        return move_home(gen_state(s, hp, ofs+line), cost + cb)
+    return (s, cost)
+
+
+def move_out(s):
+    global Homes
+    global Costs
+    # First move everybody in, if possible
+    valid = []
+    # Then try to get out, if possible
+    for row in range(4):
+        ofs = 7 + row*4
+        line = 0
+        while line < 4 and s[ofs+line] == '.':
+            line += 1
+        if line == 4:
+            continue
+        a = s[ofs+line]
+        if (row == Homes[a] and
+           (line == 3 or
+           all(s[i] == a for i in range(ofs + line + 1, ofs+4)))):
+            continue
+        rr = row + 2
+        cb = Costs[a]*line
+        while rr < 7 and s[rr] == '.':
+            cb += 2*Costs[a] if rr < 6 else Costs[a]
+            valid.append(move_home(gen_state(s, rr, ofs+line), cb))
+            rr += 1
+        ll = row + 1
+        cb = Costs[a]*line
+        while ll >= 0 and s[ll] == '.':
+            cb += 2*Costs[a] if ll > 0 else Costs[a]
+            valid.append(move_home(gen_state(s, ll, ofs+line), cb))
+            ll -= 1
+    return valid
+
+
+def search(start):
+    queue = []
+    for _ in range(100000):
+        queue.append([])
+    queue[0].append(start)
+    previous = {start: None}
+    mind = {start: 0}
+    for cost in range(50000):
+        for state in queue[cost]:
+            if mind[state] < cost:
+                continue
+            valid = move_out(state)
+            if all(state[i] == "." for i in range(7)) and len(valid) == 0:
+                paths = []
+                while state:
+                    paths.append(state)
+                    state = previous[state]
+                return cost, paths
+            for (nstate, ncost) in valid:
+                if nstate in mind and mind[nstate] <= cost+ncost:
+                    continue
+                previous[nstate] = state
+                mind[nstate] = cost + ncost
+                queue[cost + ncost].append(nstate)
+
+
+def solver(data):
+    cost, _ = search(''.join(data))
+    return cost
+```
+
+A Dijkstra search with greedy heuristic. I didn't solve this with my own. The code is referenced from [here](https://github.com/p88h/aoc2021/blob/main/other/day23.py). My origin approach is too complicated to apply a Dijkstra search. 
+
+It's still fun to play to understand how clever other people's solution is.
+
+
+## [Day 24: Arithmetic Logic Unit](https://adventofcode.com/2021/day/24)
+
+You are going to build a new kind of computer. With blow rule:
+- inp a - Read an input value and write it to variable a.
+- add a b - Add the value of a to the value of b, then store the result in variable a.
+- mul a b - Multiply the value of a by the value of b, then store the result in variable a.
+- div a b - Divide the value of a by the value of b, truncate the result to an integer, then store the result in variable a. (Here, "truncate" means to round the value toward zero.)
+- mod a b - Divide the value of a by the value of b, then store the remainder in variable a. (This is also called the modulo operation.)
+- eql a b - If the value of a and b are equal, then store the value 1 in variable a. Otherwise, store the value 0 in variable a.
+- submarine model numbers are always fourteen-digit numbers consisting only of digits 1 through 9.
+- after MONAD has finished running all of its instructions, it will indicate that the model number was valid by leaving a 0 in variable z. However, if the model number was invalid, it will leave some other non-zero value in z
+
+Part1: What is the largest model number accepted by MONAD?
+
+Part2: What is the smallest model number accepted by MONAD?
+
+```Python
+import z3
+
+
+def solve(program):
+    solver = z3.Optimize()
+    digits = [z3.BitVec(f'd_{i}', 64) for i in range(14)]
+
+    for d in digits:
+        solver.add(d >= 1)
+        solver.add(d <= 9)
+        digit_input = iter(digits)
+
+    zero, one = z3.BitVecVal(0, 64), z3.BitVecVal(1, 64)
+    registers = {r: zero for r in 'wxyz'}
+
+    for i, line in enumerate(program):
+        vars = line.split()
+        if 'inp' in line:
+            registers[vars[-1]] = next(digit_input)
+            continue
+        operator, a, b = vars
+        b = registers[b] if b in registers else int(b)
+        c = z3.BitVec(f'v{i}', 64)
+        if operator == 'add':
+            solver.add(c == registers[a] + b)
+        elif operator == 'mul':
+            solver.add(c == registers[a] * b)
+        elif operator == 'mod':
+            solver.add(registers[a] >= 0)
+            solver.add(b > 0)
+            solver.add(c == registers[a] % b)
+        elif operator == 'div':
+            solver.add(b != 0)
+            solver.add(c == registers[a] / b)
+        elif operator == 'eql':
+            solver.add(c == z3.If(registers[a] == b, one, zero))
+        else:
+            raise ValueError(f'Unknown operator: {operator}')
+        registers[a] = c
+
+    solver.add(registers['z'] == 0)
+
+    for func in (solver.maximize, solver.minimize):
+        solver.push()
+        func(sum((10 ** i) * d for i, d in enumerate(digits[::-1])))
+        solver.check()
+        print(f'{func.__name__}')
+        m = solver.model()
+        print(''.join([str(m[d]) for d in digits]))
+        solver.pop()
+```
+
+I havn't heard of Z3. The solution is from [reddit](https://www.reddit.com/r/adventofcode/comments/rnejv5/2021_day_24_solutions/).
+
+There is another approach is to analysis the input sequence(which will have special case to solve this problem because of the simularity of each-14 part). But I still like the Z3 approach, which is more elegant and generic.
+
+
+## [Day 25: Sea Cucumber](https://adventofcode.com/2021/day/25)
+
+- you got a 2D map of the area(. represent emply, > represent east-facing creature and V represent south-facing creature, example as blow). 
+- At each step, east-facing creature will move forward one step if the next-east is empty, south-facing creature will move down one step if the next-south is empty.
+- sea cucumbers that move off the right edge of the map appear on the left edge, and sea cucumbers that move off the bottom edge of the map appear on the top edge.
+
+```Text
+v...>>.vv>
+.vv>>.vv..
+>>.>v>...v
+>>v>>.>.v.
+v>v.vv.v..
+>.>>..v...
+.vv..>.>v.
+v.v..>>v.v
+....v..v.>
+```
+
+Question: To find a safe place to land your submarine, the sea cucumbers need to stop moving. How many steps does it take for the sea cucumbers to stop moving?
+
+```Python
+def gen_data():
+    data = parse_data(day=25, parser=str)
+    system = defaultdict()
+    for y, line in enumerate(data):
+        for x, c in enumerate(line):
+            system[(x, y)] = c
+    return system
+
+
+def move_once(system):
+    new_system = defaultdict()
+    x_max, y_max = max(system)
+    for loc, symbol in system.items():
+        # move east-facing
+        if loc in new_system:
+            continue
+        x, y = loc
+        next_right_loc = (x + 1, y) if x < x_max else (0, y)
+        if symbol == '>' and system[next_right_loc] == '.':
+            new_system[next_right_loc] = '>'
+            new_system[loc] = '.'
+        else:
+            new_system[loc] = symbol
+
+    final_system = defaultdict()
+    for loc, symbol in new_system.items():
+        # move south-facing
+        if loc in final_system:
+            continue
+        x, y = loc
+        next_down_loc = (x, y + 1) if y < y_max else (x, 0)
+        if symbol == 'v' and new_system[next_down_loc] == '.':
+            final_system[next_down_loc] = 'v'
+            final_system[loc] = '.'
+        else:
+            final_system[loc] = symbol
+
+    return final_system
+
+
+def day25(system):
+    num = 0
+    while True:
+        num += 1
+        new_system = move_once(system)
+        if all(new_system[loc] == symbol for loc, symbol in system.items()):
+            return num
+        else:
+            system = new_system
+```
+
+A kind of simple simulation.
+
+## Conclusion 
+
+At last, this year of adventofcode come to the end. Although some of the problems are too hard, I can't solve it on my own, but it's still a lot of fun to follow the clear thought and solution shared through reddit, github and youtube, from which I have learned so many things. 
+
+Thank you Eric the authors of the advent of code, the community and people who share their thought and solution.
