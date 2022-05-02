@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>Dong - Supply Chain Management</title>
+	<subtitle>A blog about SCM, programming, life, and other things.</subtitle>
+	<link href="https://blog.xiongdong.xyz/categories/supply-chain-management/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://blog.xiongdong.xyz/"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2021-11-29T00:00:00+00:00</updated>
+	<id>https://blog.xiongdong.xyz/categories/supply-chain-management/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Process Analysis</title>
+		<published>2021-11-29T00:00:00+00:00</published>
+		<updated>2021-11-29T00:00:00+00:00</updated>
+		<link href="https://blog.xiongdong.xyz/process-analysis/" type="text/html"/>
+		<id>https://blog.xiongdong.xyz/process-analysis/</id>
+		<content type="html">&lt;p&gt;在讨论库存的时候，往往指的是涉及到和销售有关的实物。实际上，这个概念可以拓展到更一般的层面上，医院中排队的病人，呼叫中心等待的服务等都可以视作「库存」。在讨论实物库存时，stockout 导向的往往是损失；而在涉及到服务相关的库存（尤其是存在排队现象时），stockout 导向的是更好的服务水平（也许会对应更高昂的成本）。从这两个角度，虽然侧重不同，但难点都在于「供需匹配」。&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;
+&lt;p&gt;这里，用流程的观点来看待库存。首先，流程绩效有如下度量指标：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;flow unit：流程单位&lt;&#x2F;li&gt;
+&lt;li&gt;inventory：库存&lt;&#x2F;li&gt;
+&lt;li&gt;flow time：一个 flow unit 经过一个流程所需要的时间&lt;&#x2F;li&gt;
+&lt;li&gt;flow rate：流程的单位时间产出&lt;&#x2F;li&gt;
+&lt;li&gt;capacity：流程能力&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;根据 Little&#x27;s Law&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;平均库存 = 平均单位时间产出 * 平均流程时间&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;当把一家公司看作一个销售流程时，库存周转天数的含义是需要多长的时间，可以将一块钱的投资转为收入（财务报表中通常会是 turnover days 或者 days of supply）。从这个角度，也就更加能够理解为什么库存周转的重要性了。而库存周转次数为：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;库存你周转次数 = 1&#x2F;流程时间&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;当涉及到多个流程的时候：&lt;br &#x2F;&gt;
+流程能力 = min {资源1的能力，资源2的能力，...}&lt;br &#x2F;&gt;
+单位时间产出 = min {可得输入，需求，流程能力}&lt;&#x2F;p&gt;
+&lt;p&gt;这个思路可以拓展在更复杂的情况下，比如：流水线平衡、排队问题中预测排队时间和服务水平以及质量管理等。&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Multi Period Inventory Models</title>
+		<published>2021-11-21T00:00:00+00:00</published>
+		<updated>2021-11-21T00:00:00+00:00</updated>
+		<link href="https://blog.xiongdong.xyz/multi-period-inventory-models/" type="text/html"/>
+		<id>https://blog.xiongdong.xyz/multi-period-inventory-models/</id>
+		<content type="html">&lt;p&gt;前面介绍了 EOQ Model 和 Single Period Model，分别对应稳定的需求和随机的需求且仅有一次补货机会。现实世界，往往都在这两个极端情况的中间地带，根据不同的行业会有不同的偏向。这里介绍更加一般的情况。&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;ku-cun-guan-li-ping-gu-ti-xi&quot;&gt;库存管理评估体系&lt;&#x2F;h2&gt;
+&lt;p&gt;在库存管理中，评价指标可以分为两类，一类是从服务水平上评估，另一类是从总成本上评估（二者都和安全库存和设定有关）。&lt;&#x2F;p&gt;
+&lt;p&gt;从服务水平角度出发，通常使用的指标有 Cycle Service Level(CSL) 和 Item Fill Rate(IFR)。CSL 指的是每个周期内的服务水平（类似于100个周期内有几个周期的库存低于需求）；IFR 指的是每个周期内的需求数量满足比率。通常 IFR 会比 CSL 高，原因是：即使一个周期内库存低于需求（此时 CSL 为0），但是仍有一部分需求被满足（此时 IFR 大于 0 小于1）。&lt;&#x2F;p&gt;
+&lt;p&gt;$$ CSL = 1- P[Stockout] = 1- P[X &amp;gt; s] = P[X \le s] \newline
+IFR = 1 - \frac {E[US]} Q = 1 - \frac {\sigma_{DL} G(k)} Q \newline
+G(k) = \frac Q {\sigma_{DL}}(1 - IFR)
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;其中，k 是安全库存系数。根据上述公式，可以通过 k 计算对应的服务水平，也可以根据服务水平计算出 k 的值。&lt;&#x2F;p&gt;
+&lt;p&gt;从成本的角度出发，可以使用 Cost of Stock Out Event(CSOE) 和 Cost of Item Short(CIS)，这两者需要针对缺货成本给出明确的数值定义（B1 for Stockout Event，\(c_s\) for Stockout per Item ）才能计算。&lt;&#x2F;p&gt;
+&lt;p&gt;在 CSOE 中，仍然可以通过成本公式来求解 k：
+$$ TC = cD + c_t(\frac D Q) + c_e(\frac Q 2 + k\sigma_{DL}) + B_1(\frac D Q)P[X \ge s] $$&lt;&#x2F;p&gt;
+&lt;p&gt;当上述公式取最小值时：
+$$ k = \sqrt {2 \ln \frac {B_1D} {c_e \sigma_{DL} Q \sqrt {2 \pi}}} $$&lt;&#x2F;p&gt;
+&lt;p&gt;在 CIS 中，
+$$ TC = cD + c_t(\frac D Q) + c_e(\frac Q 2 + k\sigma_{DL}) + c_s \sigma_{DL} G_u(k)(\frac D Q) $$&lt;&#x2F;p&gt;
+&lt;p&gt;当上述公式取最小值时：
+$$ P[Stockout] = P[x \ge k] = \frac {Qc_e} {Dc_s} $$&lt;&#x2F;p&gt;
+&lt;p&gt;整体而言，CSL、IFR、COSE 和 CIS，四者都和 k 关联。所以，其中一项指标确定，都可以通过先计算 k 的值然后计算另外三项，也就是说四者是互相关联的。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;an-quan-ku-cun-safety-stock&quot;&gt;安全库存(Safety Stock)&lt;&#x2F;h2&gt;
+&lt;p&gt;无论采用何种评估体系，最终都会涉及到安全库存。安全库存的计算公式如下：
+$$ Safety \space Stock = k\sigma_{DL}$$&lt;&#x2F;p&gt;
+&lt;p&gt;其中，k 是安全库存系数，可以根据需求分布和服务水平来确定。\(\sigma_{DL}\) 的定义是：在 lead time 内需求的标准差。但是在实际应用中，通常用预测来替代需求（请留意，二者是不同的）。从这个层面来讲，\(\sigma_{DL}\) 应该是在 lead time 内需求和预测的差值的标准差，也就是 RMSE。原因是：如果预测和真实需求完全一致，那么就不应该有安全库存（因为每个时间点的预测都是实际需求）；即使预测或者需求在未来的不同时间点或者时间段有变化，那么这些变化应该算作 seasonality。在没有 RMSE 的情况下，可以选择用预测的在 lead time 内的标准差来替代。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;ku-cun-guan-li-ce-lue-jie-shao&quot;&gt;库存管理策略介绍&lt;&#x2F;h2&gt;
+&lt;p&gt;常见的库存管理策略可以分为如下几类，其中 EOQ Model 和 Single Period Model(Newsvendor model) 分别都在另外的文章有专门介绍，这里不再展开。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;eoq&quot;&gt;EOQ&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Order \(Q^\ast\) every \(T^\ast\) periods&lt;&#x2F;li&gt;
+&lt;li&gt;Order \(Q^\ast\) every when \(IP = \mu_{DL}\)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;single-period&quot;&gt;Single Period&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Order \(Q^\ast\) at start of period where \(P[x \le Q] = CR\)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;base-stock-policy&quot;&gt;Base Stock Policy&lt;&#x2F;h3&gt;
+&lt;p&gt;基本策略如下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;a one-for-one replacement&lt;&#x2F;li&gt;
+&lt;li&gt;Order what was demand when it was demanded in the quantity of it was demanded&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;在这种策略下，如果销售了4个，那么就预定4个（适用于 7-11 门店补货这类补货周期较短的业务模式）。这个策略对应的参数如下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Optimal Base Stock: \(S^\ast = \mu_{DL} + k_{LOS}\sigma_{DL} \)&lt;&#x2F;li&gt;
+&lt;li&gt;Level of Service(LOS): \(LOS = P[\mu_{DL} \le S^\ast = CR] = \frac {c_s} {c_s + c_e}\)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;continuous-review-policy-s-q&quot;&gt;Continuous Review Policy(s, Q)&lt;&#x2F;h3&gt;
+&lt;p&gt;基本策略如下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Order \(Q^\ast\) when \(IP \le s\)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;其中，s 又称为再补货点，当库存低于 s 的时候，预定 \(Q^\ast\)。其中的 \(Q^\ast\) 可以通过 EOQ model 求解。这种模式偏向于需求相对稳定的产品，同时假定 Review Period 为0。&lt;&#x2F;p&gt;
+&lt;p&gt;这个策略对应的参数如下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reorder Point: \(s = \mu_{DL} + k\sigma_{DL} \)&lt;&#x2F;li&gt;
+&lt;li&gt;Order Quantity: 通过 EOQ moddel 求解&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;periodic-review-policy-r-s&quot;&gt;Periodic Review Policy(R, S)&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Order up to S every R time periods&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Periodic Review Policy(R, S) 和 Continuous Review Policy(s, Q) 的区别在于：前者添加了 Review time（R），更加符合实际情况。&lt;&#x2F;p&gt;
+&lt;p&gt;这个策略对应的参数如下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Order UP to Point: \(S = \mu_{DL + R} + k\sigma_{DL + R} \)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;sku-fen-lei&quot;&gt;SKU 分类&lt;&#x2F;h2&gt;
+&lt;p&gt;上述补货策略针对的都是单一 SKU，然而现实世界中，需要管理的 SKU 可能会有很多。这种情况下，将相似类别的产品进行分类，为每个类别设置不同的补货策略可以节省时间和精力。&lt;&#x2F;p&gt;
+&lt;p&gt;从经验上来说，按照销量，销售额或者利润额来进行降序排列，约10%的产品贡献50%的销量，50%的产品贡献约80-90%的销量，剩余的产品都是长尾。这种现象被称为 &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Power_law&quot;&gt;power law&lt;&#x2F;a&gt;，在天文、气象、人口、心理学、生物学、经济学中都有类似的现象。&lt;&#x2F;p&gt;
+&lt;p&gt;可以据此将产品分为ABC类，最多的精力放在A类产品上，频繁关注和 Review，策略是尽可能准确细致；B类产品通过设定规则（CSL、安全库存等）来进行管理，上述的补货策略主要针对的也是这类产品；C类产品尽可能少放精力，策略越简单越好（即使牺牲部分准确度）。&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Newsvendor model</title>
+		<published>2021-11-15T00:00:00+00:00</published>
+		<updated>2021-11-15T00:00:00+00:00</updated>
+		<link href="https://blog.xiongdong.xyz/newsvendor-model/" type="text/html"/>
+		<id>https://blog.xiongdong.xyz/newsvendor-model/</id>
+		<content type="html">&lt;p&gt;在 EOQ 模型中，假定需求是长期的、固定的常量，且 lead time 为0，然后求解使得整体成本最低的最佳订购量（break-even analysis）。作为对比，在 Newsvendor model(或者single period model)，需求是随机的，lead time 大于销售周期（也就是说有且仅有一次订购机会）。在这些限制条件下，评估如何确认最佳订购量和期望利润。&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;mo-xing-jia-she&quot;&gt;模型假设&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Demand: variable, random and continuous&lt;&#x2F;li&gt;
+&lt;li&gt;Lead Time: all inventory be ordered prior to the start of the time period, no replenished during the time period&lt;&#x2F;li&gt;
+&lt;li&gt;Dependence of Items: Independent&lt;&#x2F;li&gt;
+&lt;li&gt;Review Time: continuous&lt;&#x2F;li&gt;
+&lt;li&gt;Capacity&#x2F;Resource: Unlimited&lt;&#x2F;li&gt;
+&lt;li&gt;Discounts: None&lt;&#x2F;li&gt;
+&lt;li&gt;Excess Demand: Lost orders&lt;&#x2F;li&gt;
+&lt;li&gt;Perishability: None&lt;&#x2F;li&gt;
+&lt;li&gt;Planning Horizon: Single Period&lt;&#x2F;li&gt;
+&lt;li&gt;Number of Items: One&lt;&#x2F;li&gt;
+&lt;li&gt;Form of Product: Single Stage&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;考虑卖报纸的商家，在每天开始之前需要确定当天订购的数量。如果实际需求大于订购数量，报纸会卖完，同时也会损失销售机会（因为原本可以卖更多）；如果需求小于订购数量，报纸会剩余，剩余的报纸只能报废掉（这里假定，过期报纸价值会大大降低），并且当天无法进行再次补货。那么最关键的就是如何确定最佳订购量（一次决策），使期望利润最大化。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;mo-xing-tui-dao&quot;&gt;模型推导&lt;&#x2F;h2&gt;
+&lt;p&gt;先做如下定义：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;p：price&lt;&#x2F;li&gt;
+&lt;li&gt;c：cost&lt;&#x2F;li&gt;
+&lt;li&gt;\(c_e\)：excess cost&lt;&#x2F;li&gt;
+&lt;li&gt;\(c_s\): shortage cost&lt;&#x2F;li&gt;
+&lt;li&gt;Q: quantity&lt;&#x2F;li&gt;
+&lt;li&gt;P(x): probability of demand&lt;&#x2F;li&gt;
+&lt;li&gt;E[x]: expected value of demand&lt;&#x2F;li&gt;
+&lt;li&gt;g: salvage value&lt;&#x2F;li&gt;
+&lt;li&gt;B: shortage penalty&lt;&#x2F;li&gt;
+&lt;li&gt;E[Units Short]: expected units short&lt;&#x2F;li&gt;
+&lt;li&gt;E[Units Sold]: expected units sold&lt;&#x2F;li&gt;
+&lt;li&gt;E[US]: expected units short&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;zui-jia-ding-gou-liang-q-ast&quot;&gt;最佳订购量 \(Q^\ast\)&lt;&#x2F;h3&gt;
+&lt;p&gt;利润方程可以表示为：
+$$Profit = p(\min[x, Q]) - cQ$$&lt;&#x2F;p&gt;
+&lt;p&gt;在需求(Demand)是连续分布函数时，有两种成本:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;\(c_eP[x \leq Q]\) = expected excess cost \(\space\space\)   i.e. having too much product&lt;&#x2F;li&gt;
+&lt;li&gt;\(c_s(1-P[x \leq Q])\) = expected shortage cost \(\space\space\)   i.e. having too little product&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;当 E[Excess Cost] &amp;lt; E[Shortage Cost] 时，理性的选择是，增加订购量Q，二者相等时的Q即为最佳订购量\(Q^\ast\)。
+$$
+c_eP[x \leq Q] = c_s(1-P[x \leq Q]) \newline
+c_eP[x \leq Q] + c_sP[x \leq Q] = c_s \newline
+P[x \leq Q] = \frac {c_s} {c_e + c_s} \newline
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;上述公式中，右侧被称为Critical Ratio(CR)。也就是说，为了最大化利润，最佳订购量(\(Q^\ast\))覆盖的需求分布应该等于CR。&lt;&#x2F;p&gt;
+&lt;p&gt;另，根据如下公式，CR也可以表示为利润除以售价
+$$
+CR = \frac {c_s} {c_e + c_s} = \frac {p - c} {c + p - c} = \frac {p - c} p
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;当g&#x2F;B存在时，直接影响的是\(c_s\)和\(c_e\)。这时，CR可以拓展为：
+$$
+c_s = p - c + B \newline
+c_e = c - g \newline
+CR = \frac {c_s} {c_e + c_s} = \frac {p - c + B} {p + B - g}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;在实际应用中，会发现真正困难的地方在于对需求分布，在缺乏相关数据时，市场或者销售人员有可能针对期望需求做出预测，但是需求的分布（\(\mu-\sigma\)）则几乎无法预测。所以，在Newvendor model中的预测，一定需求有数据支持（哪怕是使用 triangle distribution）。同时也需要注意，预测是会有偏差的，所以使用 Newsvendor model 时也格外留意有预测分布替代需求分布时可能带来的偏差。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;expected-profits&quot;&gt;Expected Profits&lt;&#x2F;h3&gt;
+&lt;p&gt;计算期望利润之前，要先了解期望销售数量和期望短缺数量。E[Units Short] 作为E[Units Short | Q]的简写，指的是在订购量为Q是，期望短缺数量。同样的，E[Units Sold]指的是在订购量为Q是，期望销售数量。这两者都和订购数量Q有关。而E[Units Demand]是期望需求，和Q无关。下面来看这三者的关系。&lt;&#x2F;p&gt;
+&lt;p&gt;对于需求分布函数\(\f_x(x)))，订购数量Q。当需求x低于Q时，销售的数量为需求数量x；当需求数量x高于Q时，销售数量为Q（因为只有Q的库存量）。可以表示为：
+$$
+E[Units Sold] = \int_{x=0}^{Q} x f_x(x)dx + Q\int_{x=Q}^{\infty} f_x(x)dx \newline
+E[Units Short] = \int_{x=Q}^{\infty} (x-Q)f_x(x)dx \newline
+E[Units Demand] = \int_{x=0}^{\infty} x f_x(x)dx
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;根据上述公式，可以看到：
+$$E[Units Demand] = E[Units Sold] + E[Units Short] $$&lt;&#x2F;p&gt;
+&lt;p&gt;现在回到期望利润，首先利润和订购数量Q，需求x可以表述为：
+$$
+Profit(Q, x) = \begin{cases}
+px - cQ &amp;amp; \text{if } {x \leq Q }
+\\pQ - cQ &amp;amp; \text{if } {x &amp;gt; Q}
+\end{cases}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;对上述公式进行积分:
+$$
+E[Profit(Q, x)] = \int_{x=0}^{Q}(px - cQ)f_x(x_0) dx_0 + \int_{x=Q}^{\infty} (pQ - cQ)f_x(x_0) dx_0 \newline
+E[Profit(Q, x)] = p\int_{0}^{\infty}(x)f_x(x_0)dx_0 - cQ - p\int_{Q}^{\infty}(x-Q)f_x(x_0)dx_0 \newline
+E[Profit(Q, x)] = pE[x] - cQ - pE[UnitsShort]
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;这里还有另外一种表述(两者结果一致):
+$$
+E[Profit(Q, x)] = pE[UnitsSold] - cQ \newline
+E[Profit(Q, x)] = pE[x] - cQ - pE[UnitsShort]
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;其中，E[x]可以根据需求分布计算，Q可以根据需求分布和CR计算，E[UnitsShort]（后续简写为E[US]），稍后讨论如何根据需求分布来计算。所以，最终的计算公式为：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;$$ E[Profit(Q, x)] = pE[x] - cQ - pE[US] $$&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;同样的，当存在g&#x2F;B时，可以拓展上面的公式:
+$$ 
+P(Q) = \begin{cases}
+px - cQ + g(Q-X) &amp;amp; \text{if } {x \leq Q }
+\\pQ - cQ - B(x-Q) &amp;amp; \text{if } {x &amp;gt; Q}
+\end{cases} \newline
+E[P(Q)] = (p-g)E[x] - (c-g)Q - (p-g+B)E[US] \newline
+E[P(Q)] = p(E[x] - E[US]) - cQ - g(Q - (E[x] - E[US])) - BE[US]
+$$&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;unit-normal-loss-function&quot;&gt;Unit Normal Loss Function&lt;&#x2F;h4&gt;
+&lt;p&gt;对于正态分布的需求，定义G(k):
+$$ E[US] = \int_{x=Q}^{\infty} (x-Q)f_x(x)dx = \sigma G(\frac {Q-\mu} \sigma) = \sigma G(k) $$&lt;&#x2F;p&gt;
+&lt;p&gt;其中：
+$$ k = \frac {(Q-\mu)} \sigma \newline
+G(k) = f_x(x_0) - k*Prob[x_0 ] $$&lt;&#x2F;p&gt;
+&lt;p&gt;在Excel中，可以用如下公式计算: &lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;G(k)=NORMDIST(k, 0, 1, 0)-k*(1-NORMSDIST(k)).&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;summary&quot;&gt;summary&lt;&#x2F;h2&gt;
+&lt;p&gt;Newsvendor model 在时尚类产品中有很好的应用，主要原因在于：面对不确定的需求。供应链的核心挑战之一就是如何应对不确定性。在实际使用过程中，确定需求分布的参数是非常容易产生较大误差的地方。同时也要了解不同的需求分布参数对最终的最佳订购量\(Q^\ast\)和E[Profit(Q)]都会有很大的影响。&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>EOQ Model</title>
+		<published>2021-11-09T00:00:00+00:00</published>
+		<updated>2021-11-09T00:00:00+00:00</updated>
+		<link href="https://blog.xiongdong.xyz/eoq-model/" type="text/html"/>
+		<id>https://blog.xiongdong.xyz/eoq-model/</id>
+		<content type="html">&lt;p&gt;库存管理是供应链管理的核心之一。持有库存有很多原因，包括：1. 平衡需求和供给；2. 降低运营成本；3. 缓冲需求和制造方面的不确定性。在现实世界中，产品从生产、运输到商家、商家再配送给客户的过程中往往需要相当长的时间。商家通常会持有一定水平的库存量，当客户有需求的时候，可以第一时间交付，当商家持有库存不足时，由于无法满足需求，可能会失去销售机会。但是，持有过多的库存会有较高的库存持有成本甚至会影响到企业现金流，而且库存也存在过期、变质、损坏的风险。&lt;&#x2F;p&gt;
+&lt;p&gt;库存管理本质上是确定合适的产品在合适的位置以合适的形式的数量。战略决策包括产品层面和网络设计的影响。战术决策包括部署和确定携带什么物品，以什么形式（原材料、在制品、成品等），以及在哪里。最后，运营决策决定了这些库存的补货政策（何时和多少），寻求能使这些总成本最小化的补货策略。补货策略本质上需要说明两件事：要订购的数量，以及何时订购。&lt;&#x2F;p&gt;
+&lt;p&gt;不同的补货策略模型对应不同的需求和供应的假设（需求是常量还是变量，确定还是随机等）。这里首先从介绍 EOQ Model。&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;eoq-modeljie-shao&quot;&gt;EOQ Model介绍&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;eoq-modeljia-she&quot;&gt;EOQ Model假设&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Demand: constant, known and continuous&lt;&#x2F;li&gt;
+&lt;li&gt;Lead Time: Instantaneous&lt;&#x2F;li&gt;
+&lt;li&gt;Dependence of Items: Independent&lt;&#x2F;li&gt;
+&lt;li&gt;Review Time: continuous&lt;&#x2F;li&gt;
+&lt;li&gt;Capacity&#x2F;Resource: Unlimited&lt;&#x2F;li&gt;
+&lt;li&gt;Discounts: None&lt;&#x2F;li&gt;
+&lt;li&gt;Excess Demand: None&lt;&#x2F;li&gt;
+&lt;li&gt;Perishability: None&lt;&#x2F;li&gt;
+&lt;li&gt;Planning Horizon: Infinite&lt;&#x2F;li&gt;
+&lt;li&gt;Number of Items: One&lt;&#x2F;li&gt;
+&lt;li&gt;Form of Product: Single Stage&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;使用EOQ Model一定要注意模型的初始假设是否满足，尤其是均一、确定且长期保持稳定不变的需求，lead time 为0，以及整批货物一起收到。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;eoq-model-ku-cun-guan-li-ce-lue&quot;&gt;EOQ Model 库存管理策略&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;每隔 \(T^\ast \) 的时间预定 \(Q^\ast \) &lt;&#x2F;li&gt;
+&lt;li&gt;当库存低于0时，预定 \(Q^\ast \)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;eoq-model-tui-dao&quot;&gt;EOQ Model 推导&lt;&#x2F;h3&gt;
+&lt;p&gt;先做如下定义：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;D: 平均需求量&lt;&#x2F;li&gt;
+&lt;li&gt;c: 每个产品的采购单价&lt;&#x2F;li&gt;
+&lt;li&gt;\(c_t\)：订单执行成本（和订单次数有关，比如固定的清关费用等）&lt;&#x2F;li&gt;
+&lt;li&gt;\(c_e\)：库存持有成本（通常高于资金成本）&lt;&#x2F;li&gt;
+&lt;li&gt;\(c_s\)：缺货成本&lt;&#x2F;li&gt;
+&lt;li&gt;Q: 每次订购量&lt;&#x2F;li&gt;
+&lt;li&gt;T: 每次订购间隔&lt;&#x2F;li&gt;
+&lt;li&gt;N=1&#x2F;T: 单位时间订购次数&lt;&#x2F;li&gt;
+&lt;li&gt;TC(Q): 总成本&lt;&#x2F;li&gt;
+&lt;li&gt;TRC(Q): 总相关成本&lt;&#x2F;li&gt;
+&lt;li&gt;\(Q^\ast\): 总成本最低的最佳订购量&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;总成本可以表示为：TC = Purchase + Order + Holding + Shortage。在EOQ 模型的假设下可以可以改写为：
+$$ TC(Q) = cD + c_t\frac D Q + c_e\frac Q 2+ c_sE[UnitsShort] $$&lt;&#x2F;p&gt;
+&lt;p&gt;其中，采购成本 cD 和短缺成本 \(c_sE[UnitsShort]\) 和单次订购数量无关，所以问题可以简化为求如下等式的最小值：
+$$ TRC(Q) = c_t\frac D Q + c_e\frac Q 2 $$&lt;&#x2F;p&gt;
+&lt;p&gt;求解上述表达式一次导数为0时，即为 \(Q^\ast\)：
+$$ \frac {dTRC(Q)} {dQ} =  -c_t\frac D {Q^2} + \frac {c_e} 2 = 0 \newline
+\frac {c_e} 2 = c_t\frac D {Q^2} \newline
+Q^\ast = \sqrt{\frac {2c_t D} {c_e}} $$&lt;&#x2F;p&gt;
+&lt;p&gt;求解二次导数，也会发现恒大于0，所以一次导数为0时，即为最小值。
+$$ \frac {d^2TRC(Q)} {d^2Q} = \frac {2c_tD} {Q^3} &amp;gt; 0 $$&lt;&#x2F;p&gt;
+&lt;p&gt;求解 \(T^\ast\):
+$$ T^\ast = \frac {Q^\ast}{D} = \sqrt{\frac {2 c_t D} {c_e}}{\frac 1 D} = \sqrt{\frac {2 c_t} {c_e D}} $$&lt;&#x2F;p&gt;
+&lt;p&gt;求解\(TRC(Q^\ast)\):
+$$ TRC(Q^\ast) = c_t\frac D {Q^\ast} + c_e\frac {Q^\ast} 2 = \sqrt {2 c_t c_e D} \newline
+TC(Q^\ast) = cD + \sqrt {2 c_t c_e D} $$&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;eoq-model-analysis&quot;&gt;EOQ Model Analysis&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;sensitivity-to-order-quantity&quot;&gt;Sensitivity to Order Quantity&lt;&#x2F;h3&gt;
+&lt;p&gt;$$ \frac {TRC(Q)} {TRC(Q^\ast)} = \frac {c_t\frac D Q + c_e\frac Q 2} {\sqrt {2 c_t c_e D}} \newline
+= \frac {c_tD} {Q \sqrt {2 c_t c_e D}} + \frac {c_eQ} {2\sqrt {2 c_t c_e D}} \newline
+= \frac {\sqrt{c_tD}} {Q \sqrt{2c_e}} + \frac {\sqrt{c_e}Q} {2\sqrt {2 c_t D}} \newline
+= (\frac {\sqrt2} {\sqrt2})\frac {\sqrt{c_tD}} {Q \sqrt{2c_e}} + \frac {\sqrt{c_e}Q} {2\sqrt {2 c_t D}} \newline
+= \frac {\sqrt{2c_tD}} {2Q \sqrt{c_e}} + \frac {\sqrt{c_e}Q} {2\sqrt {2 c_t D}} \newline
+= (\frac 1 2)(\frac {\sqrt{2c_tD}} {Q \sqrt{c_e}} + \frac {\sqrt{c_e}Q} {\sqrt {2 c_t D}}) \newline
+= (\frac 1 2)(\frac {Q^\ast} Q + \frac Q {Q^\ast}) $$&lt;&#x2F;p&gt;
+&lt;p&gt;根据上面的公式，计算使用不同的Q对总的TRC的影响:&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;\(\frac Q {Q^\ast}\)&lt;&#x2F;th&gt;&lt;th&gt;\(\frac {TRC(Q)} {TRC(Q^\ast)}\)&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;300%&lt;&#x2F;td&gt;&lt;td&gt;167%&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;200%&lt;&#x2F;td&gt;&lt;td&gt;125%&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;150%&lt;&#x2F;td&gt;&lt;td&gt;108%&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;50%&lt;&#x2F;td&gt;&lt;td&gt;125%&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;从上述表格中可以看出，EOQ 模型对订购量Q相当稳定，即使Q比最优的\(Q^\ast\)翻倍或者减少50%，TRC也只增加25%。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;sensitivity-to-demand&quot;&gt;Sensitivity to Demand&lt;&#x2F;h3&gt;
+&lt;p&gt;既然EOQ 模型对订购量Q的变化非常稳定，那么如果考虑最初的假设，使用的时需求（D），如果使用预测（F）来替代对TRC会有多大的影响呢？尤其是考虑到预测往往会和实际需求有偏差。&lt;&#x2F;p&gt;
+&lt;p&gt;$$ {Q ^ \ast}_F = \sqrt{\frac {2c_t D_F} {c_e}} \newline
+{Q ^ \ast}_A = \sqrt{\frac {2c_t D_A} {c_e}} \newline
+\frac {{Q ^ \ast}_F} {{Q ^ \ast}_A} = \sqrt{ \frac {D_F} {D_A} } \newline
+\frac {TRC(Q)} {TRC(Q^\ast)} = (\frac 1 2)(\frac {Q^\ast} Q + \frac Q {Q^\ast})  \newline
+\frac {TRC({Q ^ \ast}_F)} {TRC({Q ^ \ast}_A)} = (\frac 1 2)(\frac {{Q ^ \ast}_A} {Q ^ \ast}_F + \frac {{Q ^ \ast}_F} {{Q ^ \ast}_A}) \newline
+= (\frac 1 2)(\sqrt { \frac {D_A} {D_F} } + \sqrt { \frac {D_F} {D_A} }) $$&lt;&#x2F;p&gt;
+&lt;p&gt;对比上述公式和EOQ对Q的稳定程度，可以看出即使预测的偏差在50%或者200%之间，TRC的变化也会非常小（1.06%）。但是这里一定要留意，EOQ 模型比较的是TRC对预测非常稳健（且需求是长期且稳定的的假设不变），并不是说任何时候都可以适用，尤其是当TRC不是优先考虑的因素时。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;sensitivity-to-order-cycle-time&quot;&gt;Sensitivity to Order Cycle Time&lt;&#x2F;h3&gt;
+&lt;p&gt;根据同样的方程，可以得出：
+\[\frac {TRC(T)} {TRC(T^\ast)} = (\frac 1 2)(\frac T {T^\ast} + \frac {T^\ast} {T}) \]&lt;&#x2F;p&gt;
+&lt;p&gt;和订购量Q一样，EOQ 模型对间隔订购时间（T）没有严格的要求。使用不同的T，对最终的TRC影响不大。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;summary&quot;&gt;summary&lt;&#x2F;h3&gt;
+&lt;p&gt;通过上述分析可以看到，EOQ模型有非常严格的假设要求，但是仍然有非常广泛的用途。当存在长期且稳定的需求时，EOQ模型都是一个很好的开始，可以根据实际情况调整Q。EOQ模型平衡的是库存持有成本和订购成本，当有其它的考虑因素时，可以知道即使Q偏离\(Q^\ast\)，那么也可以预估TRC的变化幅度。另外一点需要注意的是TRC只是TC的一部分，那么TC的变化幅度则会更小。&lt;&#x2F;p&gt;
+&lt;p&gt;EOQ模型对采购量（Q），订购周期（T），预测误差（F）等的变化都非常稳健。同样的，对于模型设定的参数，\(c_t\)、\(c_e\)等的误差，结果也是非常稳定的。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;EOQ model is a good start point, but not always a good end point.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;eoq-model-extension&quot;&gt;EOQ Model Extension&lt;&#x2F;h2&gt;
+&lt;p&gt;EOQ模型有非常严格的约束条件，下面会分别到了Lead Time 不为0对订购数量和订购时间的影响，以及存在折扣时EOQ模型如何变化。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;extension-with-non-zero-lead-time&quot;&gt;Extension with non-zero lead time&lt;&#x2F;h3&gt;
+&lt;p&gt;当Lead Time 不为零时，EOQ 模型的总成本中，TC = Purchase + Order + Holding + Shortage, 其中，Purchase、Order、Shortage cost不会变化，而 Holding cost会变化。首先来看总库存（在库+在途）的变化:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;cycle time = \(T^\ast = \frac {Q^\ast} D \)&lt;&#x2F;li&gt;
+&lt;li&gt;average pipeline inventory = \({Q^\ast}(\frac L {T^\ast}) + 0(1 - \frac L {T^\ast}) = \frac {Q^\ast L} {T^\ast} = \frac {Q^\ast L} {\frac {Q^\ast} D} = DL \)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;根据商务条款的不同，在途库存有可能会需要纳入考虑（比如EXW），这里假设在途库存的 Holding cost也需要考虑。那么新的TC方程可以表示为：
+$$ TC(Q) = cD + c_t\frac D Q + c_e(\frac Q 2 + DL)+ c_sE[UnitsShort] $$&lt;&#x2F;p&gt;
+&lt;p&gt;根据前面的推导，可以得出，Lead Time(L) &amp;gt; 0时，最佳订购量\(Q^\ast\)不会发生变化。真正会影响的是补货的时间点，为了避免缺货，L&amp;gt;0时的补货策略更新为：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;当库存低于DL时，预定 \(Q^\ast \)&lt;&#x2F;li&gt;
+&lt;li&gt;每隔 \(T^\ast \) 的时间预定 \(Q^\ast \)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;extension-with-discount-rate&quot;&gt;Extension with discount rate&lt;&#x2F;h3&gt;
+&lt;p&gt;这里分别讨论如下三种形式的折扣：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;当订购数量达到\(Q_1\)时，所有产品都享受折扣&lt;&#x2F;li&gt;
+&lt;li&gt;只有超过\(Q_1\)的部分才享受折扣&lt;&#x2F;li&gt;
+&lt;li&gt;一次性折扣（没有数量限制）&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h4 id=&quot;all-units-discount&quot;&gt;All Units Discount&lt;&#x2F;h4&gt;
+&lt;p&gt;这种情况下，采购单价c和TRC方程可以表示为:&lt;br &#x2F;&gt;
+$$
+c = \begin{cases}
+c_0 &amp;amp; \text{if } {0 \le Q&amp;lt;Q_1}
+\\c_1 &amp;amp; \text{if } {Q_1 \le Q}
+\end{cases}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+TRC = \begin{cases}
+Dc_0 + \frac {c_tD} Q + \frac {c_0hQ} 2 &amp;amp; \text{   }  {0 \le Q&amp;lt;Q_1}
+\\Dc_1 + \frac {c_tD} Q + \frac {c_1hQ} 2 &amp;amp; \text{   }  {Q_1 \le Q}
+\end{cases}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;求解过程如下：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;求解\(Q_{c0}^\ast\)和\(Q_{c1}^\ast\)&lt;&#x2F;li&gt;
+&lt;li&gt;如果\(Q_{c1}^\ast\) &amp;gt; \(Q_1\)，那么选择\(Q_{c1}^\ast\)，否则进入3&lt;&#x2F;li&gt;
+&lt;li&gt;求解\(TRC(Q_{c0}^\ast)\)和\(TRC(Q_1)-c_1\), 如果前者更小，那么选择\(Q_{c0}^\ast\)，否则选择\(Q_1\)&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h4 id=&quot;incremental-discount&quot;&gt;Incremental Discount&lt;&#x2F;h4&gt;
+&lt;p&gt;只有超过\(Q_1\)的部分才享受折扣。当订购数量低于\(Q_1\)时，采购单价保持\(c_0\)不变，当订购数量达到\(Q_1\)时，低于\(Q_1\)的部分采购单价仍为\(c_0\)，高于\(Q_1\)的部分采购单价为\(c_1\)。这种情况下，当订购数量高于\(Q_1\)时，可以等价为订购数量的采购单价都为\(c_1\)，再加上每次订购会产生固定成本\(F = (c_0 - c_1)Q_1\)。那么，
+$$ Q_1^\ast = \sqrt{\frac {2(c_t + F_i) D} {c_e}} $$&lt;&#x2F;p&gt;
+&lt;p&gt;求解过程如下：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;求解\(TRC(Q_1^\ast)\) 和 \(Q_1^\ast\)&lt;&#x2F;li&gt;
+&lt;li&gt;如果 \(Q_1^\ast &amp;gt; Q_1\), 比较\(TRC(Q_1^\ast)\)和\(TRC(Q^\ast)\)，选择较小的那个&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;summary-1&quot;&gt;summary&lt;&#x2F;h2&gt;
+&lt;p&gt;EOQ 模型的简洁和稳健容易导致误用，尤其是没有充分考虑模型要求的前置假设（稳定、均一和已知的需求）而盲目套用。&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>

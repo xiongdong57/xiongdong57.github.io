@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>Dong - Little&#x27;s Law</title>
+	<subtitle>A blog about SCM, programming, life, and other things.</subtitle>
+	<link href="https://blog.xiongdong.xyz/tags/little-s-law/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://blog.xiongdong.xyz/"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2021-11-29T00:00:00+00:00</updated>
+	<id>https://blog.xiongdong.xyz/tags/little-s-law/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Process Analysis</title>
+		<published>2021-11-29T00:00:00+00:00</published>
+		<updated>2021-11-29T00:00:00+00:00</updated>
+		<link href="https://blog.xiongdong.xyz/process-analysis/" type="text/html"/>
+		<id>https://blog.xiongdong.xyz/process-analysis/</id>
+		<content type="html">&lt;p&gt;在讨论库存的时候，往往指的是涉及到和销售有关的实物。实际上，这个概念可以拓展到更一般的层面上，医院中排队的病人，呼叫中心等待的服务等都可以视作「库存」。在讨论实物库存时，stockout 导向的往往是损失；而在涉及到服务相关的库存（尤其是存在排队现象时），stockout 导向的是更好的服务水平（也许会对应更高昂的成本）。从这两个角度，虽然侧重不同，但难点都在于「供需匹配」。&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;
+&lt;p&gt;这里，用流程的观点来看待库存。首先，流程绩效有如下度量指标：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;flow unit：流程单位&lt;&#x2F;li&gt;
+&lt;li&gt;inventory：库存&lt;&#x2F;li&gt;
+&lt;li&gt;flow time：一个 flow unit 经过一个流程所需要的时间&lt;&#x2F;li&gt;
+&lt;li&gt;flow rate：流程的单位时间产出&lt;&#x2F;li&gt;
+&lt;li&gt;capacity：流程能力&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;根据 Little&#x27;s Law&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;平均库存 = 平均单位时间产出 * 平均流程时间&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;当把一家公司看作一个销售流程时，库存周转天数的含义是需要多长的时间，可以将一块钱的投资转为收入（财务报表中通常会是 turnover days 或者 days of supply）。从这个角度，也就更加能够理解为什么库存周转的重要性了。而库存周转次数为：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;库存你周转次数 = 1&#x2F;流程时间&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;当涉及到多个流程的时候：&lt;br &#x2F;&gt;
+流程能力 = min {资源1的能力，资源2的能力，...}&lt;br &#x2F;&gt;
+单位时间产出 = min {可得输入，需求，流程能力}&lt;&#x2F;p&gt;
+&lt;p&gt;这个思路可以拓展在更复杂的情况下，比如：流水线平衡、排队问题中预测排队时间和服务水平以及质量管理等。&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>
