@@ -4,8 +4,8 @@ date = 2021-11-09
 draft = false
 
 [taxonomies]
-Categories = ["Supply Chain Management"]
-Tags = ["Inventory Management"]
+categories = ["Supply Chain Management"]
+tags = ["Inventory Management"]
 +++
 
 库存管理是供应链管理的核心之一。持有库存有很多原因，包括：1. 平衡需求和供给；2. 降低运营成本；3. 缓冲需求和制造方面的不确定性。在现实世界中，产品从生产、运输到商家、商家再配送给客户的过程中往往需要相当长的时间。商家通常会持有一定水平的库存量，当客户有需求的时候，可以第一时间交付，当商家持有库存不足时，由于无法满足需求，可能会失去销售机会。但是，持有过多的库存会有较高的库存持有成本甚至会影响到企业现金流，而且库存也存在过期、变质、损坏的风险。

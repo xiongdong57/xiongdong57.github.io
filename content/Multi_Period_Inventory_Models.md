@@ -4,8 +4,8 @@ date = 2021-11-21
 draft = false
 
 [taxonomies]
-Categories = ["Supply Chain Management"]
-Tags = ["Inventory Management", "satety stock"]
+categories = ["Supply Chain Management"]
+tags = ["Inventory Management", "satety stock"]
 +++
 
 前面介绍了 EOQ Model 和 Single Period Model，分别对应稳定的需求和随机的需求且仅有一次补货机会。现实世界，往往都在这两个极端情况的中间地带，根据不同的行业会有不同的偏向。这里介绍更加一般的情况。

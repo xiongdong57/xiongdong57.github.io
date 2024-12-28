@@ -4,8 +4,8 @@ date = 2021-11-29
 draft = false
 
 [taxonomies]
-Categories = ["Supply Chain Management"]
-Tags = ["process analysis", "Little's Law"]
+categories = ["Supply Chain Management"]
+tags = ["process analysis", "Little's Law"]
 +++
 
 在讨论库存的时候，往往指的是涉及到和销售有关的实物。实际上，这个概念可以拓展到更一般的层面上，医院中排队的病人，呼叫中心等待的服务等都可以视作「库存」。在讨论实物库存时，stockout 导向的往往是损失；而在涉及到服务相关的库存（尤其是存在排队现象时），stockout 导向的是更好的服务水平（也许会对应更高昂的成本）。从这两个角度，虽然侧重不同，但难点都在于「供需匹配」。

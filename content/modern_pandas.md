@@ -4,8 +4,8 @@ date = 2021-10-31
 draft = false
 
 [taxonomies]
-Categories = ["Programming"]
-Tags = ["Python", "Pandas"]
+categories = ["Programming"]
+tags = ["Pandas"]
 +++
 
 工作中偶尔会用到Pandas处理数据，Pandas功能丰富，也有很多不同的使用方式。以下纪录一些自己觉得比较有意思的用法。

@@ -4,8 +4,8 @@ date = 2021-12-01
 draft = false
 
 [taxonomies]
-Categories = ["Programming"]
-Tags = ["Python"]
+categories = ["Programming"]
+tags = ["Python"]
 +++
 
 This year I will do [Advent of Code 2021](https://adventofcode.com/). Considering my programming skills, Python will be used. This article will record simple descriptions of the problems, some of my solution and little notes, which should be updated everyday between December 1st and December 25th. The complete code and data be available on [GitHub](https://github.com/xiongdong57/AdventofCode2021).

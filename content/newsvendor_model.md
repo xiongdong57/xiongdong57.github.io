@@ -4,8 +4,8 @@ date = 2021-11-15
 draft = false
 
 [taxonomies]
-Categories = ["Supply Chain Management"]
-Tags = ["Inventory Management"]
+categories = ["Supply Chain Management"]
+tags = ["Inventory Management"]
 +++
 
 在 EOQ 模型中，假定需求是长期的、固定的常量，且 lead time 为0，然后求解使得整体成本最低的最佳订购量（break-even analysis）。作为对比，在 Newsvendor model(或者single period model)，需求是随机的，lead time 大于销售周期（也就是说有且仅有一次订购机会）。在这些限制条件下，评估如何确认最佳订购量和期望利润。
