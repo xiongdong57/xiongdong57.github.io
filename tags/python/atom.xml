@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Dong - Python</title>
+    <subtitle>A blog about SCM, programming, life, and other things.</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://blog.xiongdong57.top/tags/python/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://blog.xiongdong57.top/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-12-01T00:00:00+00:00</updated>
+    <id>https://blog.xiongdong57.top/tags/python/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Advent of Code 2021</title>
+        <published>2021-12-01T00:00:00+00:00</published>
+        <updated>2021-12-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://blog.xiongdong57.top/advent-of-code-2021/"/>
+        <id>https://blog.xiongdong57.top/advent-of-code-2021/</id>
+        
+        <summary type="html">&lt;p&gt;This year I will do &lt;a href=&quot;https:&#x2F;&#x2F;adventofcode.com&#x2F;&quot;&gt;Advent of Code 2021&lt;&#x2F;a&gt;. Considering my programming skills, Python will be used. This article will record simple descriptions of the problems, some of my solution and little notes, which should be updated everyday between December 1st and December 25th. The complete code and data be available on &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;xiongdong57&#x2F;AdventofCode2021&quot;&gt;GitHub&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+</feed>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+      
+      <meta name="description" content="A blog about SCM, programming, life, and other things." />
+      
+    
+
+      <title>Dong - Oracle Cloud Linux Server Configuration</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/contrib/mathtex-script-type.min.js" integrity="sha384-zWYbd0NBwgTsgIdFKVprSfTh1mbMPe5Hz1X3yY4Sd1h/K1cQoUe36OGwAGz/PcDy" crossorigin="anonymous"></script>
+              
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"
+                  onload="renderMathInElement(document.body);"></script>
+              
+          
+      
+
+      
+          <link rel="stylesheet" href="https://blog.xiongdong57.top/site.css">
+          
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;" class="logo">Dong</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;">
+                            Home
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;about">
+                            About
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;">Dong</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;">
+                                    Home
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;about">
+                                    About
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+<div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content always-active">
+        <nav id="TableOfContents">
+            <ul>
+                
+                <li>
+                    <a href="https://blog.xiongdong57.top/linux-server/#oracle-cloud-linux-server-ji-chu-pei-zhi" class="toc-link">Oracle Cloud Linux Server 基础配置</a>
+                    
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;linux-server&#x2F;">Oracle Cloud Linux Server Configuration</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2022-05-02</span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <h2 id="oracle-cloud-linux-server-ji-chu-pei-zhi">Oracle Cloud Linux Server 基础配置</h2>
+<ol>
+<li>
+<p>通过密码登录 SSH</p>
+<ul>
+<li>切换到 root 用户: <code>sudo su</code></li>
+<li>设置 root 密码: <code>passwd</code></li>
+<li>修改 sshd_config: <code>vim /etc/ssh/sshd_config</code>, PermitRootLogin 修改为 yes, PasswordAuthentication 修改为 yes</li>
+<li>重启 sshd: Oracle linux 使用 <code>systemctl restart sshd</code>, Ubuntu 使用 <code>/etc/init.d/ssh restart</code></li>
+</ul>
+</li>
+<li>
+<p>添加用户</p>
+<ul>
+<li>create new user: <code>sudo adduser username</code></li>
+<li>change user password: <code>passwd username</code></li>
+<li>switch to user: <code>su username</code></li>
+</ul>
+</li>
+<li>
+<p>v2ray 配置</p>
+<ul>
+<li>使用一键脚本:
+<ul>
+<li><code>bash &lt;(curl -sL https://cdn.jsdelivr.net/gh/Misaka-blog/Xray-script@master/xray.sh)</code></li>
+<li>arm 服务器使用: <code>bash &lt;(curl -s -L https://git.io/v2ray.sh)</code></li>
+</ul>
+</li>
+<li>cloudFlare worker:
+<ul>
+<li>新建一个 worker, 脚本内容为<pre data-lang="javascript" style="background-color:#2b303b;color:#c0c5ce;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">addEventListener</span><span>(
+</span><span>    &quot;</span><span style="color:#a3be8c;">fetch</span><span>&quot;,</span><span style="color:#bf616a;">event </span><span style="color:#b48ead;">=&gt; </span><span>{
+</span><span>        </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">url</span><span>=new URL(event.</span><span style="color:#bf616a;">request</span><span>.</span><span style="color:#bf616a;">url</span><span>);
+</span><span>        </span><span style="color:#bf616a;">url</span><span>.hostname=&quot;</span><span style="color:#a3be8c;">arm.xiongdong.xyz</span><span>&quot;;
+</span><span>        </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">request</span><span>=new Request(</span><span style="color:#bf616a;">url</span><span>,event.</span><span style="color:#bf616a;">request</span><span>);
+</span><span>        event. </span><span style="color:#8fa1b3;">respondWith</span><span>(
+</span><span>        </span><span style="color:#8fa1b3;">fetch</span><span>(</span><span style="color:#bf616a;">request</span><span>)
+</span><span>        )
+</span><span>    }
+</span><span>)
+</span></code></pre>
+</li>
+</ul>
+</li>
+<li>测试 Send，返回 200OK</li>
+<li>复制 Worker地址，填入到 V2ray 伪装域名（Host）中</li>
+<li>地址可以修改为优选的 CloudFlare IP</li>
+</ul>
+</li>
+<li>
+<p>syncthing</p>
+<ul>
+<li>
+<p>安装</p>
+<ul>
+<li>添加GPG
+<code>  sudo apt-get install curl &amp;&amp;    curl -s https://syncthing.net/release-key.txt | sudo apt-key add -  </code></li>
+<li>添加源
+<code>  echo "deb https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list  </code></li>
+<li>安装apt-transport-https
+<code>  sudo apt-get install apt-transport-https  </code></li>
+<li>更新&amp;安装
+<code>  sudo apt-get update &amp;&amp;    sudo apt-get install syncthing  </code></li>
+</ul>
+</li>
+<li>
+<p>配置</p>
+<p>修改 <code>/home/ubuntu/.config/syncthing/config.xml</code>, 找到:</p>
+<pre data-lang="xml" style="background-color:#2b303b;color:#c0c5ce;" class="language-xml "><code class="language-xml" data-lang="xml"><span>&lt;</span><span style="color:#bf616a;">gui </span><span style="color:#d08770;">enabled</span><span>=&quot;</span><span style="color:#a3be8c;">true</span><span>&quot; </span><span style="color:#d08770;">tls</span><span>=&quot;</span><span style="color:#a3be8c;">false</span><span>&quot; </span><span style="color:#d08770;">debugging</span><span>=&quot;</span><span style="color:#a3be8c;">false</span><span>&quot;&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">address</span><span>&gt;127.0.0.1:8384&lt;/</span><span style="color:#bf616a;">address</span><span>&gt;
+</span></code></pre>
+<p>tls 修改为 "true", 127.0.0.1 修改为 0.0.0.0</p>
+</li>
+<li>
+<p>开放端口</p>
+<p><code>   apt-get install iptables &amp;&amp; iptables -I INPUT -p tcp --dport 8384 -j ACCEPT &amp;&amp; iptables-save   </code>
+上述规则持久化(正常重启后会失效):</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">apt-get</span><span> install iptables-persistent
+</span><span style="color:#bf616a;">netfilter-persistent</span><span> save
+</span><span style="color:#bf616a;">netfilter-persistent</span><span> reload
+</span></code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>transmission</p>
+<ul>
+<li>
+<p>安装
+<code>  sudo apt-get install transmission-daemon  </code></p>
+</li>
+<li>
+<p>配置</p>
+<p>修改 <code>vim /var/lib/transmission-daemon/.config/transmission-daemon/settings.json</code>，参照:</p>
+<pre data-lang="json" style="background-color:#2b303b;color:#c0c5ce;" class="language-json "><code class="language-json" data-lang="json"><span>&quot;</span><span style="color:#a3be8c;">rpc-authentication-required</span><span>&quot;: </span><span style="color:#d08770;">true</span><span>,
+</span><span>&quot;</span><span style="color:#a3be8c;">rpc-bind-address</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">0.0.0.0</span><span>&quot;,
+</span><span>&quot;</span><span style="color:#a3be8c;">rpc-enabled</span><span>&quot;: </span><span style="color:#d08770;">true</span><span>,
+</span><span>&quot;</span><span style="color:#a3be8c;">rpc-host-whitelist</span><span>&quot;: &quot;&quot;,
+</span><span>&quot;</span><span style="color:#a3be8c;">rpc-host-whitelist-enabled</span><span>&quot;: </span><span style="color:#d08770;">true</span><span>,
+</span><span>&quot;</span><span style="color:#a3be8c;">rpc-password</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">123456</span><span>&quot;,
+</span><span>&quot;</span><span style="color:#a3be8c;">rpc-port</span><span>&quot;: </span><span style="color:#d08770;">9091</span><span>,
+</span><span>&quot;</span><span style="color:#a3be8c;">rpc-url</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">/transmission/</span><span>&quot;,
+</span><span>&quot;</span><span style="color:#a3be8c;">rpc-username</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">admin</span><span>&quot;,
+</span><span>&quot;</span><span style="color:#a3be8c;">rpc-whitelist</span><span>&quot;: &quot;&quot;,
+</span><span>&quot;</span><span style="color:#a3be8c;">rpc-whitelist-enabled</span><span>&quot;: </span><span style="color:#d08770;">false</span><span>,
+</span></code></pre>
+</li>
+<li>
+<p>开放9091端口，参照上述 syncthing 的方式</p>
+</li>
+<li>
+<p>启动 <code>service transmission-daemon start</code></p>
+</li>
+</ul>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+            
+                <div class="post-nav">
+                    
+                    
+                        <a class="next" href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;advent-of-code-2021&#x2F;">Advent of Code 2021 ›</a>
+                    
+                </div>
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https://blog.xiongdong57.top/even.js" ></script>
+      
+    </body>
+
+</html>

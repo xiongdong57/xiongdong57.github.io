@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Dong - satety stock</title>
+    <subtitle>A blog about SCM, programming, life, and other things.</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://blog.xiongdong57.top/tags/satety-stock/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://blog.xiongdong57.top/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-11-21T00:00:00+00:00</updated>
+    <id>https://blog.xiongdong57.top/tags/satety-stock/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Multi Period Inventory Models</title>
+        <published>2021-11-21T00:00:00+00:00</published>
+        <updated>2021-11-21T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://blog.xiongdong57.top/multi-period-inventory-models/"/>
+        <id>https://blog.xiongdong57.top/multi-period-inventory-models/</id>
+        
+        <summary type="html">&lt;p&gt;前面介绍了 EOQ Model 和 Single Period Model，分别对应稳定的需求和随机的需求且仅有一次补货机会。现实世界，往往都在这两个极端情况的中间地带，根据不同的行业会有不同的偏向。这里介绍更加一般的情况。&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+</feed>

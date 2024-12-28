@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Dong - Inventory Management</title>
+    <subtitle>A blog about SCM, programming, life, and other things.</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://blog.xiongdong57.top/tags/inventory-management/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://blog.xiongdong57.top/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-11-21T00:00:00+00:00</updated>
+    <id>https://blog.xiongdong57.top/tags/inventory-management/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Multi Period Inventory Models</title>
+        <published>2021-11-21T00:00:00+00:00</published>
+        <updated>2021-11-21T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://blog.xiongdong57.top/multi-period-inventory-models/"/>
+        <id>https://blog.xiongdong57.top/multi-period-inventory-models/</id>
+        
+        <summary type="html">&lt;p&gt;前面介绍了 EOQ Model 和 Single Period Model，分别对应稳定的需求和随机的需求且仅有一次补货机会。现实世界，往往都在这两个极端情况的中间地带，根据不同的行业会有不同的偏向。这里介绍更加一般的情况。&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Newsvendor model</title>
+        <published>2021-11-15T00:00:00+00:00</published>
+        <updated>2021-11-15T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://blog.xiongdong57.top/newsvendor-model/"/>
+        <id>https://blog.xiongdong57.top/newsvendor-model/</id>
+        
+        <summary type="html">&lt;p&gt;在 EOQ 模型中，假定需求是长期的、固定的常量，且 lead time 为0，然后求解使得整体成本最低的最佳订购量（break-even analysis）。作为对比，在 Newsvendor model(或者single period model)，需求是随机的，lead time 大于销售周期（也就是说有且仅有一次订购机会）。在这些限制条件下，评估如何确认最佳订购量和期望利润。&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>EOQ Model</title>
+        <published>2021-11-09T00:00:00+00:00</published>
+        <updated>2021-11-09T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://blog.xiongdong57.top/eoq-model/"/>
+        <id>https://blog.xiongdong57.top/eoq-model/</id>
+        
+        <summary type="html">&lt;p&gt;库存管理是供应链管理的核心之一。持有库存有很多原因，包括：1. 平衡需求和供给；2. 降低运营成本；3. 缓冲需求和制造方面的不确定性。在现实世界中，产品从生产、运输到商家、商家再配送给客户的过程中往往需要相当长的时间。商家通常会持有一定水平的库存量，当客户有需求的时候，可以第一时间交付，当商家持有库存不足时，由于无法满足需求，可能会失去销售机会。但是，持有过多的库存会有较高的库存持有成本甚至会影响到企业现金流，而且库存也存在过期、变质、损坏的风险。&lt;&#x2F;p&gt;
+&lt;p&gt;库存管理本质上是确定合适的产品在合适的位置以合适的形式的数量。战略决策包括产品层面和网络设计的影响。战术决策包括部署和确定携带什么物品，以什么形式（原材料、在制品、成品等），以及在哪里。最后，运营决策决定了这些库存的补货政策（何时和多少），寻求能使这些总成本最小化的补货策略。补货策略本质上需要说明两件事：要订购的数量，以及何时订购。&lt;&#x2F;p&gt;
+&lt;p&gt;不同的补货策略模型对应不同的需求和供应的假设（需求是常量还是变量，确定还是随机等）。这里首先从介绍 EOQ Model。&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+</feed>

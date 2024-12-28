@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+      
+      <meta name="description" content="A blog about SCM, programming, life, and other things." />
+      
+    
+
+      <title>Dong - Multi Period Inventory Models</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/contrib/mathtex-script-type.min.js" integrity="sha384-zWYbd0NBwgTsgIdFKVprSfTh1mbMPe5Hz1X3yY4Sd1h/K1cQoUe36OGwAGz/PcDy" crossorigin="anonymous"></script>
+              
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"
+                  onload="renderMathInElement(document.body);"></script>
+              
+          
+      
+
+      
+          <link rel="stylesheet" href="https://blog.xiongdong57.top/site.css">
+          
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;" class="logo">Dong</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;">
+                            Home
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;about">
+                            About
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;">Dong</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;">
+                                    Home
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;&#x2F;about">
+                                    About
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+<div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content always-active">
+        <nav id="TableOfContents">
+            <ul>
+                
+                <li>
+                    <a href="https://blog.xiongdong57.top/multi-period-inventory-models/#ku-cun-guan-li-ping-gu-ti-xi" class="toc-link">库存管理评估体系</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="https://blog.xiongdong57.top/multi-period-inventory-models/#an-quan-ku-cun-safety-stock" class="toc-link">安全库存(Safety Stock)</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="https://blog.xiongdong57.top/multi-period-inventory-models/#ku-cun-guan-li-ce-lue-jie-shao" class="toc-link">库存管理策略介绍</a>
+                    
+                    <ul>
+                        
+                        <li>
+                            <a href="https://blog.xiongdong57.top/multi-period-inventory-models/#eoq" class="toc-link">EOQ</a>
+                        </li>
+                        
+                        <li>
+                            <a href="https://blog.xiongdong57.top/multi-period-inventory-models/#single-period" class="toc-link">Single Period</a>
+                        </li>
+                        
+                        <li>
+                            <a href="https://blog.xiongdong57.top/multi-period-inventory-models/#base-stock-policy" class="toc-link">Base Stock Policy</a>
+                        </li>
+                        
+                        <li>
+                            <a href="https://blog.xiongdong57.top/multi-period-inventory-models/#continuous-review-policy-s-q" class="toc-link">Continuous Review Policy(s, Q)</a>
+                        </li>
+                        
+                        <li>
+                            <a href="https://blog.xiongdong57.top/multi-period-inventory-models/#periodic-review-policy-r-s" class="toc-link">Periodic Review Policy(R, S)</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+                <li>
+                    <a href="https://blog.xiongdong57.top/multi-period-inventory-models/#sku-fen-lei" class="toc-link">SKU 分类</a>
+                    
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;multi-period-inventory-models&#x2F;">Multi Period Inventory Models</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-11-21</span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <p>前面介绍了 EOQ Model 和 Single Period Model，分别对应稳定的需求和随机的需求且仅有一次补货机会。现实世界，往往都在这两个极端情况的中间地带，根据不同的行业会有不同的偏向。这里介绍更加一般的情况。</p>
+<span id="continue-reading"></span><h2 id="ku-cun-guan-li-ping-gu-ti-xi">库存管理评估体系</h2>
+<p>在库存管理中，评价指标可以分为两类，一类是从服务水平上评估，另一类是从总成本上评估（二者都和安全库存和设定有关）。</p>
+<p>从服务水平角度出发，通常使用的指标有 Cycle Service Level(CSL) 和 Item Fill Rate(IFR)。CSL 指的是每个周期内的服务水平（类似于100个周期内有几个周期的库存低于需求）；IFR 指的是每个周期内的需求数量满足比率。通常 IFR 会比 CSL 高，原因是：即使一个周期内库存低于需求（此时 CSL 为0），但是仍有一部分需求被满足（此时 IFR 大于 0 小于1）。</p>
+<p>$$ CSL = 1- P[Stockout] = 1- P[X &gt; s] = P[X \le s] \newline
+IFR = 1 - \frac {E[US]} Q = 1 - \frac {\sigma_{DL} G(k)} Q \newline
+G(k) = \frac Q {\sigma_{DL}}(1 - IFR)
+$$</p>
+<p>其中，k 是安全库存系数。根据上述公式，可以通过 k 计算对应的服务水平，也可以根据服务水平计算出 k 的值。</p>
+<p>从成本的角度出发，可以使用 Cost of Stock Out Event(CSOE) 和 Cost of Item Short(CIS)，这两者需要针对缺货成本给出明确的数值定义（B1 for Stockout Event，\(c_s\) for Stockout per Item ）才能计算。</p>
+<p>在 CSOE 中，仍然可以通过成本公式来求解 k：
+$$ TC = cD + c_t(\frac D Q) + c_e(\frac Q 2 + k\sigma_{DL}) + B_1(\frac D Q)P[X \ge s] $$</p>
+<p>当上述公式取最小值时：
+$$ k = \sqrt {2 \ln \frac {B_1D} {c_e \sigma_{DL} Q \sqrt {2 \pi}}} $$</p>
+<p>在 CIS 中，
+$$ TC = cD + c_t(\frac D Q) + c_e(\frac Q 2 + k\sigma_{DL}) + c_s \sigma_{DL} G_u(k)(\frac D Q) $$</p>
+<p>当上述公式取最小值时：
+$$ P[Stockout] = P[x \ge k] = \frac {Qc_e} {Dc_s} $$</p>
+<p>整体而言，CSL、IFR、COSE 和 CIS，四者都和 k 关联。所以，其中一项指标确定，都可以通过先计算 k 的值然后计算另外三项，也就是说四者是互相关联的。</p>
+<h2 id="an-quan-ku-cun-safety-stock">安全库存(Safety Stock)</h2>
+<p>无论采用何种评估体系，最终都会涉及到安全库存。安全库存的计算公式如下：
+$$ Safety \space Stock = k\sigma_{DL}$$</p>
+<p>其中，k 是安全库存系数，可以根据需求分布和服务水平来确定。\(\sigma_{DL}\) 的定义是：在 lead time 内需求的标准差。但是在实际应用中，通常用预测来替代需求（请留意，二者是不同的）。从这个层面来讲，\(\sigma_{DL}\) 应该是在 lead time 内需求和预测的差值的标准差，也就是 RMSE。原因是：如果预测和真实需求完全一致，那么就不应该有安全库存（因为每个时间点的预测都是实际需求）；即使预测或者需求在未来的不同时间点或者时间段有变化，那么这些变化应该算作 seasonality。在没有 RMSE 的情况下，可以选择用预测的在 lead time 内的标准差来替代。</p>
+<h2 id="ku-cun-guan-li-ce-lue-jie-shao">库存管理策略介绍</h2>
+<p>常见的库存管理策略可以分为如下几类，其中 EOQ Model 和 Single Period Model(Newsvendor model) 分别都在另外的文章有专门介绍，这里不再展开。</p>
+<h3 id="eoq">EOQ</h3>
+<ul>
+<li>Order \(Q^\ast\) every \(T^\ast\) periods</li>
+<li>Order \(Q^\ast\) every when \(IP = \mu_{DL}\)</li>
+</ul>
+<h3 id="single-period">Single Period</h3>
+<ul>
+<li>Order \(Q^\ast\) at start of period where \(P[x \le Q] = CR\)</li>
+</ul>
+<h3 id="base-stock-policy">Base Stock Policy</h3>
+<p>基本策略如下：</p>
+<ul>
+<li>a one-for-one replacement</li>
+<li>Order what was demand when it was demanded in the quantity of it was demanded</li>
+</ul>
+<p>在这种策略下，如果销售了4个，那么就预定4个（适用于 7-11 门店补货这类补货周期较短的业务模式）。这个策略对应的参数如下：</p>
+<ul>
+<li>Optimal Base Stock: \(S^\ast = \mu_{DL} + k_{LOS}\sigma_{DL} \)</li>
+<li>Level of Service(LOS): \(LOS = P[\mu_{DL} \le S^\ast = CR] = \frac {c_s} {c_s + c_e}\)</li>
+</ul>
+<h3 id="continuous-review-policy-s-q">Continuous Review Policy(s, Q)</h3>
+<p>基本策略如下：</p>
+<ul>
+<li>Order \(Q^\ast\) when \(IP \le s\)</li>
+</ul>
+<p>其中，s 又称为再补货点，当库存低于 s 的时候，预定 \(Q^\ast\)。其中的 \(Q^\ast\) 可以通过 EOQ model 求解。这种模式偏向于需求相对稳定的产品，同时假定 Review Period 为0。</p>
+<p>这个策略对应的参数如下：</p>
+<ul>
+<li>Reorder Point: \(s = \mu_{DL} + k\sigma_{DL} \)</li>
+<li>Order Quantity: 通过 EOQ moddel 求解</li>
+</ul>
+<h3 id="periodic-review-policy-r-s">Periodic Review Policy(R, S)</h3>
+<ul>
+<li>Order up to S every R time periods</li>
+</ul>
+<p>Periodic Review Policy(R, S) 和 Continuous Review Policy(s, Q) 的区别在于：前者添加了 Review time（R），更加符合实际情况。</p>
+<p>这个策略对应的参数如下：</p>
+<ul>
+<li>Order UP to Point: \(S = \mu_{DL + R} + k\sigma_{DL + R} \)</li>
+</ul>
+<h2 id="sku-fen-lei">SKU 分类</h2>
+<p>上述补货策略针对的都是单一 SKU，然而现实世界中，需要管理的 SKU 可能会有很多。这种情况下，将相似类别的产品进行分类，为每个类别设置不同的补货策略可以节省时间和精力。</p>
+<p>从经验上来说，按照销量，销售额或者利润额来进行降序排列，约10%的产品贡献50%的销量，50%的产品贡献约80-90%的销量，剩余的产品都是长尾。这种现象被称为 <a href="https://en.wikipedia.org/wiki/Power_law">power law</a>，在天文、气象、人口、心理学、生物学、经济学中都有类似的现象。</p>
+<p>可以据此将产品分为ABC类，最多的精力放在A类产品上，频繁关注和 Review，策略是尽可能准确细致；B类产品通过设定规则（CSL、安全库存等）来进行管理，上述的补货策略主要针对的也是这类产品；C类产品尽可能少放精力，策略越简单越好（即使牺牲部分准确度）。</p>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https://blog.xiongdong57.top/tags/inventory-management/">#Inventory Management</a>
+                    
+                        <a href="https://blog.xiongdong57.top/tags/satety-stock/">#satety stock</a>
+                    
+                </div>
+            
+            
+                <div class="post-nav">
+                    
+                        <a class="previous" href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;process-analysis&#x2F;">‹ Process Analysis</a>
+                    
+                    
+                        <a class="next" href="https:&#x2F;&#x2F;blog.xiongdong57.top&#x2F;newsvendor-model&#x2F;">Newsvendor model ›</a>
+                    
+                </div>
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https://blog.xiongdong57.top/even.js" ></script>
+      
+    </body>
+
+</html>
